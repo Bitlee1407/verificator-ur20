@@ -3,16 +3,37 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Verificator de compatibilitate UR20</title>
-<meta name="description" content="Află în 2 minute dacă linia ta de găleți e potrivită pentru o celulă de paletizare UR20. Prototip demonstrativ.">
-<meta name="theme-color" content="#2A0F45">
+<title>Verificator UR20: paletizare robotizată pentru găleți</title>
+<meta name="description" content="Verifică în 2 minute dacă linia ta de găleți (1–30 kg) e potrivită pentru o celulă de paletizare robotizată UR20. Prototip demonstrativ, date fictive.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#FF8DBE">
+<link rel="canonical" href="https://bitlee1407.github.io/verificator-ur20/">
+<link rel="alternate" hreflang="ro" href="https://bitlee1407.github.io/verificator-ur20/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ro_RO">
+<meta property="og:site_name" content="Verificator UR20">
+<meta property="og:title" content="Verificator UR20: paletizare robotizată pentru găleți">
+<meta property="og:description" content="Verifică în 2 minute dacă linia ta de găleți (1–30 kg) e potrivită pentru o celulă de paletizare robotizată UR20. Prototip demonstrativ, date fictive.">
+<meta property="og:url" content="https://bitlee1407.github.io/verificator-ur20/">
+<meta property="og:image" content="https://bitlee1407.github.io/verificator-ur20/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Verificator UR20 — paletizare robotizată pentru găleți (prototip demonstrativ)">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Verificator UR20: paletizare robotizată pentru găleți">
+<meta name="twitter:description" content="Verifică în 2 minute dacă linia ta de găleți (1–30 kg) e potrivită pentru o celulă de paletizare robotizată UR20. Prototip demonstrativ, date fictive.">
+<meta name="twitter:image" content="https://bitlee1407.github.io/verificator-ur20/og-image.png">
+<meta name="twitter:image:alt" content="Verificator UR20 — paletizare robotizată pentru găleți (prototip demonstrativ)">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
 :root{
-  --purple:#2A0F45; --purple-2:#43206b; --orange:#F58220; --orange-d:#d96d0e; --bg:#F2F4F7; --text:#1B1B1F;
-  --muted:#5b5f6b; --line:#cfd4dc; --card:#fff;
+  /* paletă roz + bleu (numele variabilelor păstrate pentru compatibilitate) */
+  --purple:#1F3A68; --purple-2:#4A86C8; --orange:#E2457F; --orange-d:#C2326A; --bg:#EDF6FD; --text:#1B2340;
+  --pink:#FF8DBE; --pink-l:#FFE6F1; --blue:#8FD0FF; --blue-l:#DDF0FF;
+  --muted:#56607a; --line:#cbd9ea; --card:#fff;
   --ok:#14663a; --ok-bg:#e4f4ea; --ok-bd:#8fcfa6;
   --warn:#6d4a00; --warn-bg:#fff3cf; --warn-bd:#e3b341;
   --bad:#9b1c1c; --bad-bg:#fde8e8; --bad-bd:#ee9a9a;
@@ -30,13 +51,11 @@ button,input,select{font:inherit;color:inherit}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* Header */
-.hero{background:var(--purple);color:#fff;padding:22px 0 26px}
-.hero .brand{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:#f6c590;font-weight:700;margin-bottom:6px}
-.hero h1{font-size:1.65rem;margin-bottom:8px}
-.hero p{color:#e8def3;margin:0;font-size:1.02rem}
+.hero{background:linear-gradient(135deg,var(--pink) 0%,#FFB3D4 40%,var(--blue) 100%);color:var(--purple);padding:24px 0 28px}
+.hero .brand{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:#9E1F55;font-weight:700;margin-bottom:6px}
+.hero h1{font-size:1.65rem;margin-bottom:8px;color:var(--purple)}
+.hero p{color:#22345c;margin:0;font-size:1.08rem;font-weight:600}
 .install{margin-top:14px;display:none}
-.banner{background:#fff7e6;border-bottom:3px solid var(--orange);color:#5a3300;font-size:.92rem;padding:10px 0;font-weight:600}
-.banner .wrap{display:flex;gap:8px;align-items:flex-start}
 
 /* Progress */
 .progress{list-style:none;display:flex;gap:6px;margin:18px 0 14px;padding:0}
@@ -58,7 +77,7 @@ details.card .inner{padding:0 18px 18px}
 .flow{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-wrap:wrap;gap:6px}
 .flow li{background:var(--bg);border-radius:999px;padding:5px 12px;font-size:.88rem;font-weight:600;color:var(--purple)}
 .flow li:not(:last-child)::after{content:" \2192";color:var(--orange);font-weight:800}
-.facts{background:#f7f2fb;border-left:4px solid var(--purple);border-radius:8px;padding:12px 14px;margin-top:12px}
+.facts{background:var(--pink-l);border-left:4px solid var(--orange);border-radius:8px;padding:12px 14px;margin-top:12px}
 .facts h3{font-size:.95rem;color:var(--purple);margin-bottom:6px}
 .facts ul,.plain-list{margin:0;padding-left:20px}
 .facts li{margin-bottom:3px}
@@ -71,7 +90,7 @@ fieldset{border:0;margin:0 0 16px;padding:0;min-width:0}
 .req{color:var(--err)}
 input[type=text],input[type=email],input[type=tel],select{width:100%;min-height:48px;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:#fff;font-size:16px}
 select{appearance:auto}
-input:focus,select:focus{border-color:var(--purple);outline:3px solid rgba(245,130,32,.45);outline-offset:0}
+input:focus,select:focus{border-color:var(--purple-2);outline:3px solid rgba(226,69,127,.35);outline-offset:0}
 .invalid{border-color:var(--err)!important;background:#fff6f5}
 .err{display:none;color:var(--err);font-size:.88rem;font-weight:600;margin-top:5px}
 .err.show{display:block}
@@ -80,7 +99,7 @@ input:focus,select:focus{border-color:var(--purple);outline:3px solid rgba(245,1
 .choice{position:relative;flex:1 1 auto;min-width:64px}
 .choice input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
 .choice span{display:flex;align-items:center;justify-content:center;text-align:center;min-height:48px;padding:6px 14px;border:2px solid var(--line);border-radius:10px;background:#fff;font-weight:600;transition:background .15s,border-color .15s,color .15s}
-.choice input:checked+span{background:var(--purple);border-color:var(--purple);color:#fff}
+.choice input:checked+span{background:var(--purple-2);border-color:var(--purple-2);color:#fff}
 .choice input:focus-visible+span{outline:3px solid var(--orange);outline-offset:2px}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .check{display:flex;gap:12px;align-items:flex-start;min-height:48px;padding:6px 0}
@@ -90,11 +109,11 @@ input:focus,select:focus{border-color:var(--purple);outline:3px solid rgba(245,1
 /* Buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 20px;border-radius:12px;border:2px solid transparent;font-weight:700;cursor:pointer;text-decoration:none;transition:transform .1s,background .15s;text-align:center}
 .btn:active{transform:scale(.98)}
-.btn-primary{background:var(--orange);color:#1B1B1F}
-.btn-primary:hover{background:var(--orange-d)}
-.btn-secondary{background:#fff;border-color:var(--purple);color:var(--purple)}
+.btn-primary{background:var(--orange-d);color:#fff}
+.btn-primary:hover{background:#A8285A}
+.btn-secondary{background:#fff;border-color:var(--purple-2);color:var(--purple)}
 .btn-ghost{background:transparent;border-color:var(--line);color:var(--text);font-weight:600}
-.btn-light{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.6);color:#fff}
+.btn-light{background:rgba(255,255,255,.7);border-color:#fff;color:var(--purple)}
 .btn-block{width:100%}
 .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
 .actions .btn{flex:1 1 180px}
@@ -114,7 +133,8 @@ input:focus,select:focus{border-color:var(--purple);outline:3px solid rgba(245,1
 .badge{display:inline-block;font-weight:800;font-size:1.02rem}
 .badge-box p{margin:6px 0 0;color:var(--text);font-size:.95rem}
 .metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.metric{background:var(--bg);border-radius:12px;padding:12px}
+.metric{background:var(--blue-l);border-radius:12px;padding:12px}
+.metric:nth-child(4n+2),.metric:nth-child(4n+3){background:var(--pink-l)}
 .metric .v{font-size:1.5rem;font-weight:800;color:var(--purple);line-height:1.15;word-break:break-word}
 .metric .l{font-size:.85rem;font-weight:700;margin-top:2px}
 .metric .s{font-size:.78rem;color:var(--muted);margin-top:2px}
@@ -133,11 +153,11 @@ input:focus,select:focus{border-color:var(--purple);outline:3px solid rgba(245,1
 .recap{background:var(--bg);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-bottom:14px}
 
 /* Confirm */
-.score-box{background:var(--purple);color:#fff;border-radius:var(--radius);padding:16px;margin:14px 0;display:flex;gap:16px;align-items:center}
-.score-num{font-size:2.6rem;font-weight:800;line-height:1;color:var(--orange)}
-.score-num small{font-size:1rem;color:#d9c9ea;font-weight:600}
+.score-box{background:linear-gradient(135deg,var(--pink) 0%,var(--blue) 100%);color:var(--purple);border-radius:var(--radius);padding:16px;margin:14px 0;display:flex;gap:16px;align-items:center}
+.score-num{font-size:2.6rem;font-weight:800;line-height:1;color:#9E1F55}
+.score-num small{font-size:1rem;color:var(--purple);font-weight:600}
 .score-lab{font-weight:800;font-size:1.1rem}
-.score-box .sub{font-size:.82rem;color:#d9c9ea}
+.score-box .sub{font-size:.82rem;color:#22345c}
 .breakdown{list-style:none;padding:0;margin:0 0 14px;font-size:.88rem;color:var(--muted)}
 .breakdown li{display:flex;justify-content:space-between;border-bottom:1px solid #eceef2;padding:5px 0}
 .next-step{background:var(--ok-bg);border:1px solid var(--ok-bd);border-radius:10px;padding:12px;font-weight:600;color:var(--ok);margin-bottom:14px}
@@ -149,7 +169,18 @@ dl.summary dd{margin:0;word-break:break-word}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--purple);color:#fff;padding:10px 18px;border-radius:999px;font-size:.9rem;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center;z-index:10}
 .toast.show{opacity:1}
 
-footer{background:var(--purple);color:#d9c9ea;font-size:.82rem;padding:20px 0 28px;margin-top:24px}
+/* FAQ */
+.faq h2{margin-bottom:4px}
+.faq-item{border-top:1px solid #eceef2}
+.faq-item:first-of-type{margin-top:6px}
+.faq-item>summary{list-style:none;cursor:pointer;min-height:48px;padding:12px 0;font-weight:700;color:var(--purple);font-size:1rem;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq-item>summary::-webkit-details-marker{display:none}
+.faq-item>summary::after{content:"+";font-size:1.5rem;line-height:1;color:var(--orange);font-weight:700;flex:none}
+.faq-item[open]>summary::after{content:"\2212"}
+.faq-a{padding:0 0 12px;font-size:.95rem}
+.faq-a .src{font-size:.82rem;color:var(--muted)}
+
+footer{background:linear-gradient(135deg,var(--blue-l) 0%,var(--pink-l) 100%);color:var(--purple);font-size:.82rem;padding:20px 0 28px;margin-top:24px}
 @media (max-width:420px){
   .hero h1{font-size:1.4rem}
   .row{grid-template-columns:1fr}
@@ -157,6 +188,95 @@ footer{background:var(--purple);color:#d9c9ea;font-size:.82rem;padding:20px 0 28
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "@id": "https://bitlee1407.github.io/verificator-ur20/#app",
+  "name": "Verificator de compatibilitate UR20",
+  "alternateName": "Verificator UR20",
+  "url": "https://bitlee1407.github.io/verificator-ur20/",
+  "description": "Verifică în 2 minute dacă linia ta de găleți (1–30 kg) e potrivită pentru o celulă de paletizare robotizată UR20. Prototip demonstrativ, date fictive.",
+  "inLanguage": "ro",
+  "applicationCategory": "BusinessApplication",
+  "applicationSubCategory": "Verificare compatibilitate paletizare robotizată",
+  "operatingSystem": "Any (browser web, PWA)",
+  "browserRequirements": "Necesită JavaScript",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "EUR"
+  },
+  "audience": {
+    "@type": "BusinessAudience",
+    "audienceType": "Directori de producție din fabrici alimentare din România care ambalează în găleți"
+  },
+  "featureList": [
+    "Estimare orientativă a compatibilității liniei de găleți cu o celulă de paletizare UR20",
+    "Număr de celule necesare, găleți și paleți pe schimb, masă ridicată manual",
+    "Checklist de validare pentru evaluarea tehnică",
+    "Validarea datelor lipsă sau greșite",
+    "Cerere simulată de evaluare tehnică, fără server"
+  ],
+  "image": "https://bitlee1407.github.io/verificator-ur20/og-image.png",
+  "disclaimer": "Prototip demonstrativ cu date fictive. Valorile PURATOS sunt rezultate de test, nu garanții.",
+  "about": {
+    "@type": "Thing",
+    "name": "Paletizare robotizată cu robot colaborativ UR20 (Universal Robots) pentru găleți de 5–13 kg"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": "https://bitlee1407.github.io/verificator-ur20/#faq",
+  "inLanguage": "ro",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Ce face Verificatorul UR20?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Verificatorul UR20 estimează orientativ dacă linia ta de găleți (greutate 1–30 kg, debit 1–40 găleți/minut) este potrivită pentru o celulă de paletizare robotizată cu robot UR20. Rezultatul are trei stări (în limitele testate, necesită validare tehnică, nepotrivit în configurația testată) și arată numărul de celule, găleți și paleți pe schimb, masa ridicată manual și o listă de verificări pentru evaluarea tehnică. Este un prototip demonstrativ cu date fictive, fără server și fără ofertă de preț; decizia finală se ia după evaluarea tehnică Tech-Con."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Ce rezultate a obținut celula UR20 la PURATOS?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fapte din studiul de caz Tech-Con: PURATOS paletiza manual găleți de plastic de 5 kg și 13 kg; Tech-Con a implementat 2 celule UR20. Ținta a fost de minimum 6 găleți/minut; la test s-au obținut 7,4 găleți/minut pentru găleți de 13 kg și 8,6 găleți/minut pentru găleți de 5 kg (aproximativ 23% și 43% peste țintă). La FAT nu au fost observate preluări nereușite. Un palet are 100 de găleți de 5 kg sau 44 de găleți de 13 kg (europalet). Aceste valori sunt rezultate de test, nu garanții pentru alte linii sau produse. Sursă: studiul de caz PURATOS – Tech-Con, AI-Powered Business Challenge 2026."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Ce greutate de găleată acoperă verificatorul?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fapt: UR20 are sarcină utilă nominală de 20 kg (date producător, Universal Robots), iar sarcina totală include și gripperul. Configurația testată la PURATOS a lucrat cu găleți de 5–13 kg. Ipoteză de lucru (nu fapt): presupunem un gripper de aproximativ 5 kg, deci aproximativ 15 kg utili pentru găleată. Pragurile din verificator sunt: până la 13 kg în limitele testate, între 13 și 15 kg necesită validare tehnică, peste 15 kg este nepotrivit în configurația testată. Sursă: date producător Universal Robots (UR20); studiul de caz PURATOS – Tech-Con."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Ce rămâne manual și ce trebuie verificat înainte de o replicare?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fapt: în celula testată rămân manuale schimbarea paleților și amplasarea separatoarelor dintre straturi. Un robot mai rapid nu crește automat debitul fabricii; trebuie verificat blocajul din amonte și din aval. De verificat la evaluare: greutatea, forma, materialul, mânerul și stabilitatea găleții; debitul de intrare, modelul de paletizare, separatoarele, spațiul, accesul și ritmul de schimb al paleților; evaluarea riscurilor, interacțiunea cu oamenii, igiena și procedurile; integrarea cu transportorul, semnalele de proces și pregătirea celor 2 poziții de paletizare. Sursă: studiul de caz PURATOS – Tech-Con."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Cum sunt verificate datele introduse și ce se întâmplă cu ele?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Câmpurile lipsă sau greșite sunt marcate imediat, cu un mesaj clar: greutatea trebuie să fie între 1 și 30 kg, debitul între 1 și 40 găleți/minut, orele pe schimb între 1 și 12, iar la cererea de evaluare sunt validate numele companiei, adresa de e-mail, telefonul românesc (opțional) și consimțământul. Datele rămân doar în browserul tău (fără server), iar cererea este simulată. Folosește date fictive, nu date personale reale."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -164,13 +284,14 @@ footer{background:var(--purple);color:#d9c9ea;font-size:.82rem;padding:20px 0 28
   <div class="wrap">
     <div class="brand">AI-Powered Business Challenge 2026</div>
     <h1>Verificator de compatibilitate UR20</h1>
-    <p>Află în 2 minute dacă linia ta de găleți e potrivită pentru o celulă de paletizare UR20.</p>
+    <p>Găleți grele? Lasă robotul să le care. Vezi în 2 minute dacă linia ta e pregătită.</p>
     <button type="button" class="btn btn-light install" id="installBtn">Instalează aplicația</button>
   </div>
 </header>
-<div class="banner" role="note"><div class="wrap"><span aria-hidden="true">&#9888;</span><span>Prototip demonstrativ — folosiți date fictive, nu date personale reale.</span></div></div>
 
 <main class="wrap" id="main">
+
+  <noscript><div class="card"><p>Verificatorul are nevoie de JavaScript pentru calcul. Activați JavaScript sau consultați întrebările frecvente de mai jos.</p></div></noscript>
 
   <details class="card" id="how">
     <summary>Cum funcționează celula</summary>
@@ -390,6 +511,50 @@ footer{background:var(--purple);color:#d9c9ea;font-size:.82rem;padding:20px 0 28
     </div>
   </section>
 
+  <!-- FAQ -->
+  <section class="card faq" id="faq" aria-labelledby="faqh">
+    <h2 id="faqh">Întrebări frecvente</h2>
+    <p class="lead">Faptele din studiul de caz PURATOS și ipotezele noastre de lucru sunt marcate separat.</p>
+    <details class="faq-item">
+      <summary>Ce face Verificatorul UR20?</summary>
+      <div class="faq-a">
+        <p>Verificatorul UR20 estimează orientativ dacă linia ta de găleți (greutate 1–30 kg, debit 1–40 găleți/minut) este potrivită pentru o celulă de paletizare robotizată cu robot UR20. Rezultatul are trei stări (în limitele testate, necesită validare tehnică, nepotrivit în configurația testată) și arată numărul de celule, găleți și paleți pe schimb, masa ridicată manual și o listă de verificări pentru evaluarea tehnică.</p>
+        <p>Este un prototip demonstrativ cu date fictive, fără server și fără ofertă de preț; decizia finală se ia după evaluarea tehnică Tech-Con.</p>
+      </div>
+    </details>
+    <details class="faq-item">
+      <summary>Ce rezultate a obținut celula UR20 la PURATOS?</summary>
+      <div class="faq-a">
+        <p>Fapte din studiul de caz Tech-Con: PURATOS paletiza manual găleți de plastic de 5 kg și 13 kg; Tech-Con a implementat 2 celule UR20. Ținta a fost de minimum 6 găleți/minut; la test s-au obținut 7,4 găleți/minut pentru găleți de 13 kg și 8,6 găleți/minut pentru găleți de 5 kg (aproximativ 23% și 43% peste țintă). La FAT nu au fost observate preluări nereușite. Un palet are 100 de găleți de 5 kg sau 44 de găleți de 13 kg (europalet).</p>
+        <p>Aceste valori sunt rezultate de test, nu garanții pentru alte linii sau produse.</p>
+        <p class="src">Sursă: studiul de caz PURATOS – Tech-Con, AI-Powered Business Challenge 2026.</p>
+      </div>
+    </details>
+    <details class="faq-item">
+      <summary>Ce greutate de găleată acoperă verificatorul?</summary>
+      <div class="faq-a">
+        <p>Fapt: UR20 are sarcină utilă nominală de 20 kg (date producător, Universal Robots), iar sarcina totală include și gripperul. Configurația testată la PURATOS a lucrat cu găleți de 5–13 kg.</p>
+        <p>Ipoteză de lucru (nu fapt): presupunem un gripper de aproximativ 5 kg, deci aproximativ 15 kg utili pentru găleată. Pragurile din verificator sunt: până la 13 kg în limitele testate, între 13 și 15 kg necesită validare tehnică, peste 15 kg este nepotrivit în configurația testată.</p>
+        <p class="src">Sursă: date producător Universal Robots (UR20); studiul de caz PURATOS – Tech-Con.</p>
+      </div>
+    </details>
+    <details class="faq-item">
+      <summary>Ce rămâne manual și ce trebuie verificat înainte de o replicare?</summary>
+      <div class="faq-a">
+        <p>Fapt: în celula testată rămân manuale schimbarea paleților și amplasarea separatoarelor dintre straturi. Un robot mai rapid nu crește automat debitul fabricii; trebuie verificat blocajul din amonte și din aval.</p>
+        <p>De verificat la evaluare: greutatea, forma, materialul, mânerul și stabilitatea găleții; debitul de intrare, modelul de paletizare, separatoarele, spațiul, accesul și ritmul de schimb al paleților; evaluarea riscurilor, interacțiunea cu oamenii, igiena și procedurile; integrarea cu transportorul, semnalele de proces și pregătirea celor 2 poziții de paletizare.</p>
+        <p class="src">Sursă: studiul de caz PURATOS – Tech-Con.</p>
+      </div>
+    </details>
+    <details class="faq-item">
+      <summary>Cum sunt verificate datele introduse și ce se întâmplă cu ele?</summary>
+      <div class="faq-a">
+        <p>Câmpurile lipsă sau greșite sunt marcate imediat, cu un mesaj clar: greutatea trebuie să fie între 1 și 30 kg, debitul între 1 și 40 găleți/minut, orele pe schimb între 1 și 12, iar la cererea de evaluare sunt validate numele companiei, adresa de e-mail, telefonul românesc (opțional) și consimțământul.</p>
+        <p>Datele rămân doar în browserul tău (fără server), iar cererea este simulată. Folosește date fictive, nu date personale reale.</p>
+      </div>
+    </details>
+  </section>
+
 </main>
 
 <footer>
@@ -560,8 +725,6 @@ function renderResult(v,r){
   buildChecklist(v,r).forEach(function(it){ h+='<li><span class="ic '+it[0]+'" aria-hidden="true">'+(it[0]==='ok'?'&#10003;':'!')+'</span><span><span class="sr-only">'+(it[0]==='ok'?'În regulă: ':'De verificat: ')+'</span>'+esc(it[1])+'</span></li>'; });
   h+='</ul>';
 
-  h+='<div class="hypo"><strong>Ipoteză de lucru (nu fapt):</strong> UR20 are sarcină utilă nominală de 20 kg (date producător). Presupunem un gripper de ≈ 5 kg, deci capacitate utilă ≈ 15 kg pentru găleată. Pragurile folosite: ≤ 13 kg în limitele testate, 13–15 kg necesită validare, > 15 kg nepotrivit pentru configurația testată. Pragurile trebuie confirmate de Tech-Con.</div>';
-  h+='<p class="disclaimer">Rezultatele sunt orientative. Decizia finală se ia după evaluarea tehnică Tech-Con. Valorile PURATOS sunt rezultate de test, nu garanții.</p>';
   $('resultBody').innerHTML=h;
 }
 

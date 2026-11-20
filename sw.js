@@ -1,6 +1,6 @@
 /* Service worker: cache-first, funcționează offline după prima încărcare. */
-const CACHE = 'verificator-ur20-v1';
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
+const CACHE = 'verificator-ur20-v3';
+const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './og-image.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bitlee1407.github.io/verificator-ur20/sitemap.xml
