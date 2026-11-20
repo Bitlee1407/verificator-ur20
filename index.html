@@ -57,6 +57,37 @@ button,input,select{font:inherit;color:inherit}
 .hero p{color:#22345c;margin:0;font-size:1.08rem;font-weight:600}
 .install{margin-top:14px;display:none}
 
+/* Ilustrație hero (robot colaborativ UR20, SVG inline) */
+.hero-in{display:flex;flex-direction:column}
+.hero-art{width:100%;max-width:440px;margin:10px auto 0}
+.hero-art svg{display:block;width:100%;height:auto;max-height:170px}
+.ur-fn{fill:var(--purple)}
+.ur-fp{fill:var(--orange)}
+.ur-sn{stroke:var(--purple)}
+.ur-sh{transform-box:view-box;transform-origin:215px 134px;animation:ur-sh 4.6s ease-in-out infinite}
+.ur-el{transform-box:view-box;transform-origin:165.1px 79.3px;animation:ur-el 4.6s ease-in-out infinite}
+.ur-wr{transform-box:view-box;transform-origin:100px 90px;animation:ur-wr 4.6s ease-in-out infinite}
+.ur-carry{opacity:0;animation:ur-carry 4.6s linear infinite}
+.ur-placed{opacity:0;animation:ur-placed 4.6s linear infinite}
+.ur-feed{animation:ur-feed 4.6s ease-in-out infinite}
+.ur-fl{animation:ur-fl 4.6s ease-in-out infinite}
+.ur-fr{animation:ur-fr 4.6s ease-in-out infinite}
+.ur-belt{animation:ur-belt 4.6s ease-in-out infinite}
+@keyframes ur-sh{0%,7%{transform:rotate(0deg)}17%{transform:rotate(7.9deg)}47%{transform:rotate(42.6deg)}55%,61%{transform:rotate(43.5deg)}67%{transform:rotate(42.6deg)}92%{transform:rotate(7.9deg)}100%{transform:rotate(0deg)}}
+@keyframes ur-el{0%,7%{transform:rotate(0deg)}17%{transform:rotate(11.1deg)}47%{transform:rotate(141.5deg)}55%,61%{transform:rotate(158deg)}67%{transform:rotate(141.5deg)}92%{transform:rotate(11.1deg)}100%{transform:rotate(0deg)}}
+@keyframes ur-wr{0%,7%{transform:rotate(0deg)}17%{transform:rotate(-18.9deg)}47%{transform:rotate(-184.1deg)}55%,61%{transform:rotate(-201.5deg)}67%{transform:rotate(-184.1deg)}92%{transform:rotate(-18.9deg)}100%{transform:rotate(0deg)}}
+@keyframes ur-carry{0%,6.9%{opacity:0}7%,58.9%{opacity:1}59%,100%{opacity:0}}
+@keyframes ur-placed{0%,58.9%{opacity:0}59%,90%{opacity:1}97%,100%{opacity:0}}
+@keyframes ur-feed{0%,7%{opacity:1;transform:translateX(0)}7.01%,22%{opacity:0;transform:translateX(-56px)}28%,62%{opacity:1;transform:translateX(-56px)}90%,100%{opacity:1;transform:translateX(0)}}
+@keyframes ur-fl{0%{transform:translateX(-4px)}6%,59%{transform:translateX(0)}65%,100%{transform:translateX(-4px)}}
+@keyframes ur-fr{0%{transform:translateX(4px)}6%,59%{transform:translateX(0)}65%,100%{transform:translateX(4px)}}
+@keyframes ur-belt{0%,62%{stroke-dashoffset:0}90%,100%{stroke-dashoffset:-56}}
+@media (min-width:640px){
+  .hero-in{flex-direction:row;align-items:center;gap:20px}
+  .hero-text{flex:1 1 0;min-width:0}
+  .hero-art{flex:0 0 48%;max-width:none;margin:0}
+}
+
 /* Progress */
 .progress{list-style:none;display:flex;gap:6px;margin:18px 0 14px;padding:0}
 .progress li{flex:1;text-align:center;font-size:.8rem;font-weight:700;color:var(--muted);padding-top:12px;border-top:5px solid var(--line);transition:color .2s,border-color .2s}
@@ -74,6 +105,9 @@ details.card>summary::-webkit-details-marker{display:none}
 details.card>summary::after{content:"+";font-size:1.6rem;line-height:1;color:var(--orange);font-weight:700}
 details.card[open]>summary::after{content:"\2212"}
 details.card .inner{padding:0 18px 18px}
+.photo{margin:0 0 14px}
+.photo img{display:block;width:100%;height:auto;border-radius:12px;background:var(--blue-l)}
+.photo figcaption{font-size:.8rem;color:var(--muted);margin-top:6px;line-height:1.35}
 .flow{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-wrap:wrap;gap:6px}
 .flow li{background:var(--bg);border-radius:999px;padding:5px 12px;font-size:.88rem;font-weight:600;color:var(--purple)}
 .flow li:not(:last-child)::after{content:" \2192";color:var(--orange);font-weight:800}
@@ -230,6 +264,14 @@ footer{background:linear-gradient(135deg,var(--blue-l) 0%,var(--pink-l) 100%);co
   .metric .v{font-size:1.3rem}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (prefers-reduced-motion:reduce){
+  /* poză statică: brațul ridică o găleată, alta așteaptă pe transportor */
+  .ur-sh{transform:rotate(7.9deg)}
+  .ur-el{transform:rotate(11.1deg)}
+  .ur-wr{transform:rotate(-18.9deg)}
+  .ur-carry{opacity:1}
+  .ur-feed{transform:translateX(-56px)}
+}
 </style>
 <script type="application/ld+json">
 {
@@ -325,10 +367,69 @@ footer{background:linear-gradient(135deg,var(--blue-l) 0%,var(--pink-l) 100%);co
 <body>
 
 <header class="hero">
-  <div class="wrap">
-    <div class="brand">AI-Powered Business Challenge 2026</div>
-    <h1>Verificator de compatibilitate UR20</h1>
-    <button type="button" class="btn btn-light install" id="installBtn">Instalează aplicația</button>
+  <div class="wrap hero-in">
+    <div class="hero-text">
+      <div class="brand">AI-Powered Business Challenge 2026</div>
+      <h1>Verificator de compatibilitate UR20</h1>
+      <button type="button" class="btn btn-light install" id="installBtn">Instalează aplicația</button>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+<svg viewBox="4 -14 400 212" width="400" height="212" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <g id="ur-bw">
+      <path d="M-17 5 L17 5 L14.5 32 L-14.5 32 Z" fill="#fff" stroke="#1F3A68" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M-15.8 14 L15.8 14 L15.1 23 L-15.1 23 Z" class="ur-fp"/>
+      <rect x="-19" y="0" width="38" height="6" rx="2.5" fill="#fff" stroke="#1F3A68" stroke-width="2"/>
+    </g>
+    <g id="ur-bp">
+      <path d="M-17 5 L17 5 L14.5 32 L-14.5 32 Z" class="ur-fp" stroke="#1F3A68" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M-15.8 14 L15.8 14 L15.1 23 L-15.1 23 Z" fill="#fff"/>
+      <rect x="-19" y="0" width="38" height="6" rx="2.5" class="ur-fp" stroke="#1F3A68" stroke-width="2"/>
+    </g>
+    <path id="ur-hd" d="M-16 3 C-16 -11 16 -11 16 3" fill="none" stroke="#1F3A68" stroke-width="2.4" stroke-linecap="round"/>
+  </defs>
+  <!-- podea -->
+  <rect x="4" y="190" width="400" height="8" class="ur-fn" opacity=".16"/>
+  <line x1="4" y1="190" x2="404" y2="190" class="ur-sn" stroke-width="2" opacity=".4"/>
+  <!-- transportor -->
+  <rect x="38" y="172" width="7" height="18" class="ur-fn"/>
+  <rect x="118" y="172" width="7" height="18" class="ur-fn"/>
+  <rect x="16" y="160" width="130" height="12" rx="6" class="ur-fn"/>
+  <line class="ur-belt" x1="28" y1="166" x2="134" y2="166" stroke="#fff" stroke-opacity=".6" stroke-width="2" stroke-dasharray="8 6"/>
+  <circle cx="23" cy="166" r="3" fill="#fff"/><circle cx="139" cy="166" r="3" fill="#fff"/>
+  <g class="ur-feed"><use href="#ur-hd" x="100" y="128"/><use href="#ur-bw" x="100" y="128"/></g>
+  <!-- palet + găleți -->
+  <rect x="259" y="176" width="132" height="7" rx="1.5" class="ur-fn"/>
+  <rect x="262" y="183" width="14" height="7" class="ur-fn"/><rect x="318" y="183" width="14" height="7" class="ur-fn"/><rect x="374" y="183" width="14" height="7" class="ur-fn"/>
+  <use href="#ur-bp" x="281" y="144"/><use href="#ur-bw" x="325" y="144"/><use href="#ur-bp" x="369" y="144"/>
+  <use href="#ur-hd" x="325" y="112"/><use href="#ur-bp" x="325" y="112"/>
+  <use href="#ur-hd" x="369" y="112"/><use href="#ur-bw" x="369" y="112"/>
+  <g class="ur-placed"><use href="#ur-hd" x="281" y="112"/><use href="#ur-bw" x="281" y="112"/></g>
+  <!-- robot -->
+  <rect x="191" y="184" width="48" height="7" rx="2" class="ur-fn"/>
+  <rect x="199" y="138" width="32" height="48" rx="6" fill="#fff" stroke="#1F3A68" stroke-width="2.5"/>
+  <rect x="200.5" y="161" width="29" height="6" class="ur-fp"/>
+  <g class="ur-sh">
+    <line x1="215" y1="134" x2="165.1" y2="79.3" class="ur-sn" stroke-width="25" stroke-linecap="round"/>
+    <line x1="215" y1="134" x2="165.1" y2="79.3" stroke="#fff" stroke-width="19" stroke-linecap="round"/>
+    <g class="ur-el">
+      <line x1="165.1" y1="79.3" x2="100" y2="90" class="ur-sn" stroke-width="23" stroke-linecap="round"/>
+      <line x1="165.1" y1="79.3" x2="100" y2="90" stroke="#fff" stroke-width="17" stroke-linecap="round"/>
+      <circle cx="165.1" cy="79.3" r="12" class="ur-fp ur-sn" stroke-width="2.5"/><circle cx="165.1" cy="79.3" r="3.5" fill="#fff"/>
+      <g class="ur-wr">
+        <rect x="94" y="94" width="12" height="9" class="ur-fn"/>
+        <rect x="88" y="102" width="24" height="10" rx="3" fill="#fff" stroke="#1F3A68" stroke-width="2"/>
+        <g class="ur-carry"><use href="#ur-hd" x="100" y="128"/><use href="#ur-bw" x="100" y="128"/></g>
+        <rect class="ur-fl ur-fn" x="91.5" y="112" width="3" height="11" rx="1"/>
+        <rect class="ur-fr ur-fn" x="105.5" y="112" width="3" height="11" rx="1"/>
+        <circle cx="100" cy="90" r="9" class="ur-fp ur-sn" stroke-width="2.5"/><circle cx="100" cy="90" r="2.8" fill="#fff"/>
+      </g>
+    </g>
+    <circle cx="215" cy="134" r="13" class="ur-fp ur-sn" stroke-width="2.5"/><circle cx="215" cy="134" r="4" fill="#fff"/>
+  </g>
+</svg>
+    </div>
+    <p class="sr-only">Ilustrație: un robot colaborativ UR20 ridică o găleată de pe transportor și o așază pe un palet cu găleți.</p>
   </div>
 </header>
 
@@ -339,6 +440,10 @@ footer{background:linear-gradient(135deg,var(--blue-l) 0%,var(--pink-l) 100%);co
   <details class="card" id="how">
     <summary>Cum funcționează celula</summary>
     <div class="inner">
+      <figure class="photo">
+        <img src="img/celule-ur20-puratos.jpg" width="604" height="340" loading="lazy" alt="Două celule de paletizare cu roboți UR20 care așază găleți pe paleți, la PURATOS">
+        <figcaption>Celulele UR20 implementate de Tech-Con la PURATOS. Sursa imaginii: prezentarea Tech-Con (studiu de caz).</figcaption>
+      </figure>
       <ol class="flow" aria-label="Fluxul celulei">
         <li>umplere</li><li>transportor</li><li>vision mâner</li><li>gripper</li><li>2 poziții de paletizare</li><li>palet finalizat</li>
       </ol>
