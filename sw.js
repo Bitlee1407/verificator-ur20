@@ -1,6 +1,6 @@
 /* Service worker: pagina se ia întâi de pe rețea (versiunea cea mai nouă), iar offline din cache.
    Iconițele/imaginile: cache-first. Funcționează offline după prima încărcare. */
-const CACHE = 'verificator-ur20-v4';
+const CACHE = 'verificator-ur20-v5';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './og-image.png'];
 
 self.addEventListener('install', (event) => {

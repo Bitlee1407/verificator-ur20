@@ -169,6 +169,49 @@ dl.summary dd{margin:0;word-break:break-word}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--purple);color:#fff;padding:10px 18px;border-radius:999px;font-size:.9rem;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center;z-index:10}
 .toast.show{opacity:1}
 
+/* Flux automat (simulat) + Panou CRM */
+.auto{border:2px solid var(--blue);border-radius:var(--radius);background:#fff;padding:14px 14px 6px;margin:0 0 16px}
+.auto .sec-title{margin:0 0 4px;font-size:1.1rem}
+.auto .lead{margin-bottom:12px}
+.tl{list-style:none;margin:0;padding:0}
+.tl li{position:relative;padding:0 0 14px 46px;min-height:44px;animation:fade .3s ease}
+.tl li::before{content:"";position:absolute;left:15px;top:34px;bottom:2px;width:2px;background:var(--blue)}
+.tl li:last-child::before{display:none}
+.tl .tic{position:absolute;left:0;top:0;width:32px;height:32px;border-radius:50%;background:var(--ok-bg);color:var(--ok);border:2px solid var(--ok-bd);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem}
+.tl .tt{display:block;font-weight:800;color:var(--purple);font-size:1rem;line-height:1.3}
+.tl .td{display:block;font-size:.92rem;margin-top:2px;overflow-wrap:anywhere}
+.tl .td b{color:var(--purple)}
+.mails{list-style:none;margin:6px 0 4px;padding:0;font-size:.9rem}
+.mails li{display:block;position:static;padding:5px 0;min-height:0;border-top:1px dashed var(--line);animation:none}
+.mails li::before{display:none}
+.mails .md{font-weight:700;color:var(--purple)}
+.tl .small{font-size:.84rem;color:var(--muted);margin-top:4px}
+.prev{margin-top:6px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.prev>summary{list-style:none;cursor:pointer;min-height:44px;padding:8px 12px;font-weight:700;color:var(--purple);font-size:.92rem;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.prev>summary::-webkit-details-marker{display:none}
+.prev>summary::after{content:"+";font-size:1.4rem;line-height:1;color:var(--orange-d);font-weight:700}
+.prev[open]>summary::after{content:"\2212"}
+.mail-body{padding:0 12px 12px;font-size:.88rem}
+.mail-body .subj{font-weight:700;color:var(--purple);margin-bottom:2px}
+.mail-body .pre{color:var(--muted);margin-bottom:8px}
+.mail-body .txt{white-space:pre-wrap;overflow-wrap:anywhere;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+details.crm{border:2px solid var(--line);border-radius:12px;background:#fff;margin:0 0 14px}
+details.crm>summary{list-style:none;cursor:pointer;min-height:48px;padding:10px 14px;font-weight:700;color:var(--purple);display:flex;justify-content:space-between;align-items:center;gap:8px}
+details.crm>summary::-webkit-details-marker{display:none}
+details.crm>summary::after{content:"+";font-size:1.5rem;line-height:1;color:var(--orange-d);font-weight:700}
+details.crm[open]>summary::after{content:"\2212"}
+.crm-in{padding:0 14px 14px}
+.leads{list-style:none;margin:0 0 12px;padding:0}
+.leads li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;border-top:1px solid #eceef2;padding:9px 0;font-size:.9rem}
+.leads .id{font-weight:800;color:var(--purple)}
+.leads .dt{color:var(--muted);font-size:.82rem;text-align:right}
+.leads .co{grid-column:1/-1;font-weight:600;overflow-wrap:anywhere}
+.leads .meta{grid-column:1/-1;color:var(--muted);font-size:.85rem}
+.pill{display:inline-block;border-radius:999px;padding:1px 10px;font-size:.78rem;font-weight:700}
+.pill.hot{background:var(--ok-bg);color:var(--ok)}
+.pill.cold{background:var(--warn-bg);color:var(--warn)}
+.crm-in .btn{min-height:44px;font-size:.92rem}
+
 /* FAQ */
 .faq h2{margin-bottom:4px}
 .faq-item{border-top:1px solid #eceef2}
@@ -217,7 +260,8 @@ footer{background:linear-gradient(135deg,var(--blue-l) 0%,var(--pink-l) 100%);co
     "Număr de celule necesare, găleți și paleți pe schimb, masă ridicată manual",
     "Checklist de validare pentru evaluarea tehnică",
     "Validarea datelor lipsă sau greșite",
-    "Cerere simulată de evaluare tehnică, fără server"
+    "Cerere simulată de evaluare tehnică, fără server",
+    "Flux de vânzări simulat: rutare spre centrul Tech-Con, fișă CRM, secvență de e-mail și sarcină pentru inginer"
   ],
   "image": "https://bitlee1407.github.io/verificator-ur20/og-image.png",
   "disclaimer": "Prototip demonstrativ cu date fictive. Valorile PURATOS sunt rezultate de test.",
@@ -499,6 +543,14 @@ footer{background:linear-gradient(135deg,var(--blue-l) 0%,var(--pink-l) 100%);co
   <section class="step card" id="stepDone" aria-labelledby="hds">
     <h2 id="hds" tabindex="-1">Cerere înregistrată (simulat)</h2>
     <div id="doneBody"></div>
+    <details class="crm" id="crmPanel">
+      <summary>Panou CRM (simulat)</summary>
+      <div class="crm-in">
+        <p class="lead">Lead-urile salvate local în acest browser. Nu există server sau CRM real.</p>
+        <ul class="leads" id="leadList" aria-live="polite"></ul>
+        <button type="button" class="btn btn-secondary" id="dlCsv">Exportă CRM (.csv)</button>
+      </div>
+    </details>
     <div class="actions">
       <button type="button" class="btn btn-primary" id="dlTxt">Descarcă rezumat (.txt)</button>
       <button type="button" class="btn btn-secondary" id="dlIcs">Adaugă în calendar (.ics)</button>
@@ -570,6 +622,25 @@ var STORE_KEY = 'ur20_cereri_v1';
 var RATE_5 = 8.6, RATE_13 = 7.4, TARGET = 6;
 var PER_PALLET = {5:100, 13:44};
 var COUNTIES = ['Alba','Arad','Argeș','Bacău','Bihor','Bistrița-Năsăud','Botoșani','Brăila','Brașov','București','Buzău','Călărași','Caraș-Severin','Cluj','Constanța','Covasna','Dâmbovița','Dolj','Galați','Giurgiu','Gorj','Harghita','Hunedoara','Ialomița','Iași','Ilfov','Maramureș','Mehedinți','Mureș','Neamț','Olt','Prahova','Satu Mare','Sălaj','Sibiu','Suceava','Teleorman','Timiș','Tulcea','Vaslui','Vâlcea','Vrancea'];
+var SEQ_KEY = 'ur20_lead_seq_v1';
+var LEAD_YEAR = 2026;
+/* reședințe de județ (lat, lon aproximative) pentru calculul distanței */
+var COUNTY_GEO = {'Alba':[46.07,23.58],'Arad':[46.18,21.32],'Argeș':[44.86,24.87],'Bacău':[46.57,26.91],'Bihor':[47.05,21.92],'Bistrița-Năsăud':[47.13,24.50],'Botoșani':[47.75,26.67],'Brăila':[45.27,27.97],'Brașov':[45.65,25.61],'București':[44.43,26.10],'Buzău':[45.15,26.82],'Călărași':[44.20,27.33],'Caraș-Severin':[45.30,21.89],'Cluj':[46.77,23.59],'Constanța':[44.18,28.65],'Covasna':[45.86,25.79],'Dâmbovița':[44.93,25.46],'Dolj':[44.32,23.80],'Galați':[45.44,28.05],'Giurgiu':[43.90,25.97],'Gorj':[45.04,23.27],'Harghita':[46.36,25.80],'Hunedoara':[45.88,22.91],'Ialomița':[44.57,27.37],'Iași':[47.16,27.59],'Ilfov':[44.56,25.95],'Maramureș':[47.66,23.57],'Mehedinți':[44.63,22.66],'Mureș':[46.54,24.56],'Neamț':[46.93,26.37],'Olt':[44.43,24.37],'Prahova':[44.94,26.03],'Satu Mare':[47.79,22.88],'Sălaj':[47.19,23.06],'Sibiu':[45.79,24.15],'Suceava':[47.65,26.26],'Teleorman':[43.97,25.33],'Timiș':[45.75,21.23],'Tulcea':[45.18,28.80],'Vaslui':[46.64,27.73],'Vâlcea':[45.10,24.37],'Vrancea':[45.70,27.18]};
+var CENTERS = [
+  {name:'Dragomirești-Deal', lat:44.47, lon:25.99},
+  {name:'Iași', lat:47.16, lon:27.59},
+  {name:'Timișoara', lat:45.75, lon:21.23}
+];
+var MAIL_HOT = [
+  {day:0, subject:'5,5 tone pe oră, ridicate de mână?', note:'confirmare + rezumatul rezultatului', pre:'Un calcul simplu pentru liniile care ambalează în găleți de 5–13 kg.'},
+  {day:3, subject:'Ce a arătat testul la 13 kg și ce rămâne manual', note:'dovadă onestă: rezultate de test și limite', pre:''},
+  {day:7, subject:'Vreți să vedeți celula în funcțiune?', note:'invitație la demonstrație', pre:''}
+];
+var MAIL_COLD = [
+  {day:0, subject:'Rezultatul liniei dumneavoastră și ce verificăm în continuare', note:'confirmare + rezumatul rezultatului', pre:'Ce arată verificarea liniei dumneavoastră și care sunt pașii următori.'},
+  {day:7, subject:'Ce a arătat testul la 13 kg și ce rămâne manual', note:'rezultate de test și limite', pre:''},
+  {day:14, subject:'Înainte de orice robot: verificați amonte și aval', note:'ce se verifică înainte de o decizie', pre:''}
+];
 
 /* ---------- utilitare ---------- */
 function $(id){ return document.getElementById(id); }
@@ -852,6 +923,18 @@ function summaryText(rec){
   L.push('');
   L.push('Scor de calificare (intern, demonstrativ): '+s.total+'/100 — '+s.label);
   L.push('Slot propus pentru demonstrație: '+slotText(new Date(rec.slot)));
+  if(rec.auto){
+    var a=rec.auto;
+    L.push('');
+    L.push('FLUX AUTOMAT (simulat, nimic nu a fost trimis)');
+    L.push('- Centru Tech-Con: '+a.centerName+' ('+a.routeText+')');
+    L.push('- Lead ID: '+a.leadId);
+    L.push('- Etapa pâlniei: '+a.stage+' (scor '+s.total+'/100)');
+    L.push('- Sursă: '+a.source+'; data creării: '+a.created);
+    L.push('- E-mailuri programate:');
+    a.emails.forEach(function(m,i){ L.push('  '+(i+1)+'. Zi '+m.day+' ('+m.date+'): '+m.subject); });
+    L.push('- Sarcină inginer: evaluare tehnică, termen '+a.taskDue+', responsabil centrul '+a.centerName+', '+a.checks+' puncte de verificat, demonstrație preferată: '+c.demo);
+  }
   L.push('');
   L.push('Rezultatele sunt orientative; decizia finală după evaluarea tehnică Tech-Con.');
   L.push('Prototip demonstrativ — AI-Powered Business Challenge 2026. Date fictive; valorile PURATOS sunt rezultate de test.');
@@ -882,6 +965,137 @@ function saveRecord(rec){
 function countSaved(){ return loadStore().length + memStore.length; }
 function updateCount(){ $('savedCount').textContent='Cereri salvate local în acest prototip: '+countSaved(); }
 
+/* ---------- flux automat de vânzări (simulat) ---------- */
+var memSeq=0;
+function nextSeq(){
+  var n;
+  try{ n=(parseInt(localStorage.getItem(SEQ_KEY),10)||0)+1; localStorage.setItem(SEQ_KEY,String(n)); }
+  catch(e){ memSeq+=1; n=memSeq; }
+  return n;
+}
+function haversine(lat1,lon1,lat2,lon2){
+  var R=6371, t=Math.PI/180, dLat=(lat2-lat1)*t, dLon=(lon2-lon1)*t;
+  var x=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*t)*Math.cos(lat2*t)*Math.sin(dLon/2)*Math.sin(dLon/2);
+  return 2*R*Math.asin(Math.sqrt(x));
+}
+function routeLead(county){
+  var g=COUNTY_GEO[county];
+  if(!county || !g) return {center:CENTERS[0].name, km:null, text:'Centru implicit: Dragomirești-Deal (județ necompletat) — de confirmat telefonic', def:true};
+  var best=null, bd=Infinity;
+  CENTERS.forEach(function(c){ var d=haversine(g[0],g[1],c.lat,c.lon); if(d<bd){ bd=d; best=c; } });
+  var km=Math.round(bd/10)*10;
+  var near = km===0 ? 'sub 10 km de ' : '≈ '+km+' km de ';
+  return {center:best.name, km:km, text:'Atribuit centrului Tech-Con '+best.name+' · '+near+county, def:false};
+}
+function dmy(d){ return pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+d.getFullYear(); }
+function addDays(d,n){ return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n); }
+function addBusinessDays(d,n){
+  var x=new Date(d.getFullYear(),d.getMonth(),d.getDate()), added=0;
+  while(added<n){ x.setDate(x.getDate()+1); var g=x.getDay(); if(g!==0&&g!==6) added++; }
+  return x;
+}
+function utmSource(){
+  var s='';
+  try{ s=(new URLSearchParams(location.search).get('utm_source')||'').trim().slice(0,40); }catch(e){ s=''; }
+  return s || 'direct/QR';
+}
+function leadId(n){ var s=String(n); while(s.length<4) s='0'+s; return 'UR20-'+LEAD_YEAR+'-'+s; }
+function mailBody(rec,a){
+  var v=rec.line, r=rec.result, c=rec.contact;
+  var L=[];
+  L.push('Bună ziua, '+c.contact+',');
+  L.push('');
+  L.push('Vă mulțumim pentru cererea de evaluare tehnică înregistrată pentru '+c.company+'. Rezumatul rezultatului pentru linia dumneavoastră:');
+  L.push('- Status: '+r.badge);
+  L.push('- Celule necesare: '+(r.cls==='bad'?'nu se calculează pentru configurația testată':r.cells));
+  L.push('- Paleți/schimb: '+(r.bpp?fmt(r.palletsShift,1):'se stabilește la evaluare')+' ('+fmt(r.perShift)+' găleți/schimb)');
+  L.push('');
+  L.push('Un inginer de la centrul Tech-Con '+a.centerName+' vă contactează până la '+a.taskDue+' pentru evaluarea tehnică (preferință demonstrație: '+c.demo+').');
+  if(a.hot) L.push('Un calcul simplu: 7 găleți de 13 kg pe minut înseamnă aproximativ 5,5 tone ridicate de mână într-o oră (calcul ilustrativ). Rezultatele de test PURATOS nu sunt garanții.');
+  L.push('');
+  L.push('Cu stimă,');
+  L.push('Echipa Tech-Con');
+  L.push('');
+  L.push('Dacă nu doriți să mai primiți mesaje de la noi, răspundeți „STOP” sau folosiți linkul de dezabonare: [link dezabonare]. Prototip demonstrativ — AI-Powered Business Challenge 2026. Date fictive; valorile PURATOS sunt rezultate de test, nu garanții.');
+  return L.join('\n');
+}
+function runAutomation(v,r,c,s,rec){
+  var now=new Date(), route=routeLead(c.county), seq=nextSeq(), hot=s.total>=60;
+  var plan=hot?MAIL_HOT:MAIL_COLD;
+  var a={
+    leadId:leadId(seq), centerName:route.center, km:route.km, routeText:route.text, def:route.def,
+    county:c.county||'', stage:s.label, hot:hot, source:utmSource(), created:dmy(now),
+    emails:plan.map(function(m){ return {day:m.day, date:dmy(addDays(now,m.day)), subject:m.subject, note:m.note}; }),
+    taskDue:dmy(addBusinessDays(now,2)),
+    checks:buildChecklist(v,r).filter(function(it){ return it[0]==='warn'; }).length,
+    previewText:plan[0].pre
+  };
+  rec.auto=a;
+  return a;
+}
+var autoTimers=[];
+function clearAutoTimers(){ autoTimers.forEach(function(t){ clearTimeout(t); }); autoTimers=[]; }
+function autoSteps(rec){
+  var a=rec.auto, c=rec.contact, steps=[];
+  steps.push({t:'Rutare automată', d:esc(a.routeText)});
+  steps.push({t:'Fișă CRM creată', d:'ID <b>'+esc(a.leadId)+'</b> · etapa pâlniei: <b>'+esc(a.stage)+'</b> · scor '+rec.score.total+'/100 · responsabil: centrul Tech-Con '+esc(a.centerName)+' · sursă: '+esc(a.source)+' · creat: '+esc(a.created)});
+  var m='<ul class="mails">';
+  a.emails.forEach(function(e){ m+='<li><span class="md">Zi '+e.day+' · '+esc(e.date)+'</span> — '+esc(e.subject)+' <span style="color:var(--muted)">('+esc(e.note)+')</span></li>'; });
+  m+='</ul>';
+  var first=a.emails[0];
+  m+='<details class="prev"><summary>Previzualizare e-mail 1</summary><div class="mail-body"><div class="subj">Subiect: '+esc(first.subject)+'</div><div class="pre">Previzualizare: '+esc(a.previewText)+'</div><div class="txt">'+esc(mailBody(rec,a))+'</div></div></details>';
+  m+='<div class="small">'+(a.hot?'Secvență pentru cerere relevantă (zi 0 / 3 / 7).':'Secvență de nutrire, mai lentă (zi 0 / 7 / 14).')+' Nimic nu este trimis — în producție: CRM + platformă de e-mail.</div>';
+  steps.push({t:'Secvență de e-mail programată', d:m});
+  steps.push({t:'Sarcină pentru inginer', d:'Evaluare tehnică · termen <b>'+esc(a.taskDue)+'</b> (2 zile lucrătoare) · atribuită centrului Tech-Con '+esc(a.centerName)+' · '+a.checks+' '+(a.checks===1?'punct':'puncte')+' „De verificat” din checklist · demonstrație preferată: '+esc(c.demo)});
+  return steps;
+}
+function playTimeline(rec){
+  clearAutoTimers();
+  var ol=$('autoTl'); if(!ol) return;
+  var steps=autoSteps(rec);
+  function add(i){
+    var li=document.createElement('li');
+    li.innerHTML='<span class="tic" aria-hidden="true">&#10003;</span><span class="tt"><span class="sr-only">Pasul '+(i+1)+' din 4, finalizat: </span>'+esc(steps[i].t)+'</span><span class="td">'+steps[i].d+'</span>';
+    ol.appendChild(li);
+  }
+  var reduce=false;
+  try{ reduce=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+  if(reduce){ for(var i=0;i<steps.length;i++) add(i); return; }
+  steps.forEach(function(_,i){ autoTimers.push(setTimeout(function(){ add(i); }, i*350)); });
+}
+
+/* ---------- panou CRM (simulat) + export CSV ---------- */
+function allLeads(){ return loadStore().concat(memStore); }
+function recStage(rec){ return rec.auto ? rec.auto.stage : (rec.score?rec.score.label:'—'); }
+function recDate(rec){ return rec.auto ? rec.auto.created : dmy(new Date(rec.ts||Date.now())); }
+function renderCrm(){
+  var ul=$('leadList'); if(!ul) return;
+  var list=allLeads().slice().reverse();
+  if(!list.length){ ul.innerHTML='<li style="display:block;color:var(--muted)">Niciun lead salvat local încă.</li>'; return; }
+  var h='';
+  list.forEach(function(rec){
+    var a=rec.auto, c=rec.contact||{}, st=recStage(rec);
+    h+='<li><span class="id">'+esc(a?a.leadId:'—')+'</span><span class="dt">'+esc(recDate(rec))+'</span>'+
+       '<span class="co">'+esc(c.company||'—')+'</span>'+
+       '<span class="meta">Centru: '+esc(a?a.centerName:'—')+' · scor '+(rec.score?rec.score.total:'—')+' · <span class="pill '+(st==='Cerere relevantă'?'hot':'cold')+'">'+esc(st)+'</span></span></li>';
+  });
+  ul.innerHTML=h;
+}
+function csvCell(x){
+  var s=String(x==null?'':x);
+  if(/^[=@\t\r]/.test(s) || /^[+\-]\D/.test(s)) s="'"+s;
+  if(/[";\r\n]/.test(s)) s='"'+s.replace(/"/g,'""')+'"';
+  return s;
+}
+function crmCsv(){
+  var rows=[['ID lead','Companie','Contact','Funcție','E-mail','Telefon','Județ','Centru Tech-Con','Distanță (km)','Scor','Etapă','Sursă','Data creării','Termen sarcină','Demonstrație preferată']];
+  allLeads().forEach(function(rec){
+    var a=rec.auto||{}, c=rec.contact||{};
+    rows.push([a.leadId||'', c.company, c.contact, c.role, c.email, c.phone, c.county, a.centerName||'', (a.km==null?'':a.km), rec.score?rec.score.total:'', recStage(rec), a.source||'', recDate(rec), a.taskDue||'', c.demo]);
+  });
+  return '﻿'+rows.map(function(r){ return r.map(csvCell).join(';'); }).join('\r\n')+'\r\n';
+}
+
 $('reqForm').addEventListener('submit',function(ev){
   ev.preventDefault();
   var c=validateReq();
@@ -890,11 +1104,13 @@ $('reqForm').addEventListener('submit',function(ev){
   var s=score(v,r,c), slot=proposedSlot();
   var rec={id:'ur20-'+Date.now(), ts:Date.now(), line:v, result:{cls:r.cls,badge:r.badge,rate:r.rate,rateNote:r.rateNote,cells:r.cells,perShift:r.perShift,bpp:r.bpp,palletsShift:r.palletsShift,tShift:r.tShift,tDay:r.tDay}, contact:c, score:s, slot:slot.getTime()};
   state.record=rec;
+  runAutomation(v,r,c,s,rec);
   var saved=saveRecord(rec);
   var h='';
   h+='<div class="score-box"><div class="score-num">'+s.total+'<small>/100</small></div><div><div class="score-lab">'+esc(s.label)+'</div><div class="sub">Scor de calificare (intern, demonstrativ)</div></div></div>';
   h+='<ul class="breakdown"><li><span>Potrivire tehnică</span><span>'+s.fit+' / 40</span></li><li><span>Rol (decident)</span><span>'+s.role+' / 20</span></li><li><span>Termen investiție</span><span>'+s.tl+' / 20</span></li><li><span>Volum și schimburi</span><span>'+s.vol+' / 20</span></li></ul>';
   h+='<div class="next-step">Următorul pas: un inginer Tech-Con vă contactează în 2 zile lucrătoare pentru evaluare (simulat).<br><span style="font-weight:500">Slot propus pentru demonstrație: '+esc(slotText(slot))+' — '+esc(c.demo)+'.</span></div>';
+  h+='<div class="auto" id="autoFlow"><h3 class="sec-title" id="autoH">Flux automat declanșat (simulat)</h3><p class="lead">Ce s-ar întâmpla automat în spatele cererii. Nimic nu este trimis și nimic nu pleacă din browser.</p><ol class="tl" id="autoTl" aria-live="polite" aria-labelledby="autoH"></ol></div>';
   h+='<h3 class="sec-title" style="margin-top:0">Rezumatul cererii</h3><dl class="summary">';
   h+='<dt>Companie</dt><dd>'+esc(c.company)+'</dd><dt>Contact</dt><dd>'+esc(c.contact)+(c.role?' ('+esc(c.role)+')':'')+'</dd><dt>E-mail</dt><dd>'+esc(c.email)+'</dd>';
   if(c.phone) h+='<dt>Telefon</dt><dd>'+esc(c.phone)+'</dd>';
@@ -905,8 +1121,14 @@ $('reqForm').addEventListener('submit',function(ev){
   h+='<dt>Demonstrație</dt><dd>'+esc(c.demo)+'</dd><dt>Termen</dt><dd>'+esc(c.timeline)+'</dd></dl>';
   if(!saved) h+='<p class="disclaimer">Stocarea locală nu este disponibilă în acest browser; cererea a fost păstrată doar cât timp pagina rămâne deschisă.</p>';
   $('doneBody').innerHTML=h;
-  updateCount();
+  updateCount(); renderCrm();
   show('stepDone',3);
+  playTimeline(rec);
+});
+$('crmPanel').addEventListener('toggle',function(){ if($('crmPanel').open) renderCrm(); });
+$('dlCsv').addEventListener('click',function(){
+  if(!allLeads().length){ toast('Nu există lead-uri de exportat.'); return; }
+  download('crm-ur20-simulat.csv','text/csv;charset=utf-8',crmCsv());
 });
 $('dlTxt').addEventListener('click',function(){ if(state.record) download('rezumat-evaluare-ur20.txt','text/plain;charset=utf-8','\ufeff'+summaryText(state.record)); });
 $('dlIcs').addEventListener('click',function(){ if(state.record) download('demonstratie-ur20.ics','text/calendar;charset=utf-8',icsText(state.record)); });
@@ -916,13 +1138,15 @@ $('restart').addEventListener('click',function(){
   ['company','contact','email','phone'].forEach(function(id){setErr(id,null);});
   $('consent-err').classList.remove('show'); showSummary('lineSummary',0); showSummary('reqSummary',0);
   state={inputs:null,result:null,record:null};
+  clearAutoTimers();
   show('step1',1);
 });
 $('clearData').addEventListener('click',function(){
   try{ localStorage.removeItem(STORE_KEY); }catch(e){}
-  memStore=[]; updateCount(); toast('Datele salvate local au fost șterse.');
+  try{ localStorage.removeItem(SEQ_KEY); }catch(e){}
+  memStore=[]; memSeq=0; updateCount(); renderCrm(); toast('Datele salvate local (cereri, lead-uri, contor) au fost șterse.');
 });
-updateCount();
+updateCount(); renderCrm();
 
 /* ---------- instalare PWA ---------- */
 var deferred=null;
