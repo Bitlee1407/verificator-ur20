@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Verificator de compatibilitate UR20</title>
+<meta name="description" content="Află în 2 minute dacă linia ta de găleți e potrivită pentru o celulă de paletizare UR20. Prototip demonstrativ.">
+<meta name="theme-color" content="#2A0F45">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  --purple:#2A0F45; --purple-2:#43206b; --orange:#F58220; --orange-d:#d96d0e; --bg:#F2F4F7; --text:#1B1B1F;
+  --muted:#5b5f6b; --line:#cfd4dc; --card:#fff;
+  --ok:#14663a; --ok-bg:#e4f4ea; --ok-bd:#8fcfa6;
+  --warn:#6d4a00; --warn-bg:#fff3cf; --warn-bd:#e3b341;
+  --bad:#9b1c1c; --bad-bg:#fde8e8; --bad-bd:#ee9a9a;
+  --err:#b3261e;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 "Segoe UI",Inter,Roboto,system-ui,-apple-system,Arial,sans-serif;overflow-x:hidden}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+h1,h2,h3{line-height:1.25;margin:0}
+p{margin:0 0 .6em}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Header */
+.hero{background:var(--purple);color:#fff;padding:22px 0 26px}
+.hero .brand{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:#f6c590;font-weight:700;margin-bottom:6px}
+.hero h1{font-size:1.65rem;margin-bottom:8px}
+.hero p{color:#e8def3;margin:0;font-size:1.02rem}
+.install{margin-top:14px;display:none}
+.banner{background:#fff7e6;border-bottom:3px solid var(--orange);color:#5a3300;font-size:.92rem;padding:10px 0;font-weight:600}
+.banner .wrap{display:flex;gap:8px;align-items:flex-start}
+
+/* Progress */
+.progress{list-style:none;display:flex;gap:6px;margin:18px 0 14px;padding:0}
+.progress li{flex:1;text-align:center;font-size:.8rem;font-weight:700;color:var(--muted);padding-top:12px;border-top:5px solid var(--line);transition:color .2s,border-color .2s}
+.progress li.done{color:var(--purple);border-color:var(--purple-2)}
+.progress li.current{color:var(--purple);border-color:var(--orange)}
+.progress small{display:block;font-weight:500;font-size:.75rem}
+
+/* Cards */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:0 1px 3px rgba(20,10,40,.12);padding:18px;margin-bottom:16px}
+.card h2{font-size:1.25rem;color:var(--purple);margin-bottom:4px}
+.lead{color:var(--muted);font-size:.95rem;margin-bottom:14px}
+details.card{padding:0}
+details.card>summary{list-style:none;cursor:pointer;min-height:56px;padding:14px 18px;font-weight:700;color:var(--purple);font-size:1.1rem;display:flex;justify-content:space-between;align-items:center;gap:8px;border-radius:var(--radius)}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary::after{content:"+";font-size:1.6rem;line-height:1;color:var(--orange);font-weight:700}
+details.card[open]>summary::after{content:"\2212"}
+details.card .inner{padding:0 18px 18px}
+.flow{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.flow li{background:var(--bg);border-radius:999px;padding:5px 12px;font-size:.88rem;font-weight:600;color:var(--purple)}
+.flow li:not(:last-child)::after{content:" \2192";color:var(--orange);font-weight:800}
+.facts{background:#f7f2fb;border-left:4px solid var(--purple);border-radius:8px;padding:12px 14px;margin-top:12px}
+.facts h3{font-size:.95rem;color:var(--purple);margin-bottom:6px}
+.facts ul,.plain-list{margin:0;padding-left:20px}
+.facts li{margin-bottom:3px}
+
+/* Form */
+.field{margin-bottom:16px}
+label,legend{display:block;font-weight:700;margin-bottom:6px;font-size:.98rem;padding:0}
+fieldset{border:0;margin:0 0 16px;padding:0;min-width:0}
+.hint{display:block;font-weight:400;color:var(--muted);font-size:.85rem}
+.req{color:var(--err)}
+input[type=text],input[type=email],input[type=tel],select{width:100%;min-height:48px;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:#fff;font-size:16px}
+select{appearance:auto}
+input:focus,select:focus{border-color:var(--purple);outline:3px solid rgba(245,130,32,.45);outline-offset:0}
+.invalid{border-color:var(--err)!important;background:#fff6f5}
+.err{display:none;color:var(--err);font-size:.88rem;font-weight:600;margin-top:5px}
+.err.show{display:block}
+.err::before{content:"\26A0\FE0E  "}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choice{position:relative;flex:1 1 auto;min-width:64px}
+.choice input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.choice span{display:flex;align-items:center;justify-content:center;text-align:center;min-height:48px;padding:6px 14px;border:2px solid var(--line);border-radius:10px;background:#fff;font-weight:600;transition:background .15s,border-color .15s,color .15s}
+.choice input:checked+span{background:var(--purple);border-color:var(--purple);color:#fff}
+.choice input:focus-visible+span{outline:3px solid var(--orange);outline-offset:2px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.check{display:flex;gap:12px;align-items:flex-start;min-height:48px;padding:6px 0}
+.check input{width:26px;height:26px;margin:2px 0 0;flex:none;accent-color:var(--purple)}
+.check label{font-weight:500;margin:0}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 20px;border-radius:12px;border:2px solid transparent;font-weight:700;cursor:pointer;text-decoration:none;transition:transform .1s,background .15s;text-align:center}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--orange);color:#1B1B1F}
+.btn-primary:hover{background:var(--orange-d)}
+.btn-secondary{background:#fff;border-color:var(--purple);color:var(--purple)}
+.btn-ghost{background:transparent;border-color:var(--line);color:var(--text);font-weight:600}
+.btn-light{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.6);color:#fff}
+.btn-block{width:100%}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.actions .btn{flex:1 1 180px}
+.demo-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+.demo-actions .btn{flex:1 1 170px;font-size:.92rem;min-height:44px}
+.form-summary{display:none;background:var(--bad-bg);border:1px solid var(--bad-bd);color:var(--bad);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-weight:600}
+.form-summary.show{display:block}
+
+/* Results */
+.step{display:none}
+.step.active{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.badge-box{border:2px solid;border-radius:var(--radius);padding:14px 16px;margin-bottom:14px}
+.badge-box.ok{background:var(--ok-bg);border-color:var(--ok-bd);color:var(--ok)}
+.badge-box.warn{background:var(--warn-bg);border-color:var(--warn-bd);color:var(--warn)}
+.badge-box.bad{background:var(--bad-bg);border-color:var(--bad-bd);color:var(--bad)}
+.badge{display:inline-block;font-weight:800;font-size:1.02rem}
+.badge-box p{margin:6px 0 0;color:var(--text);font-size:.95rem}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.metric{background:var(--bg);border-radius:12px;padding:12px}
+.metric .v{font-size:1.5rem;font-weight:800;color:var(--purple);line-height:1.15;word-break:break-word}
+.metric .l{font-size:.85rem;font-weight:700;margin-top:2px}
+.metric .s{font-size:.78rem;color:var(--muted);margin-top:2px}
+.metric.wide{grid-column:1/-1}
+.sec-title{font-size:1.02rem;color:var(--purple);margin:18px 0 8px}
+.notes{margin:0 0 4px;padding-left:20px}
+.notes li{margin-bottom:6px;font-size:.95rem}
+.checklist{list-style:none;margin:0;padding:0}
+.checklist li{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #eceef2;font-size:.94rem}
+.checklist li:last-child{border-bottom:0}
+.checklist .ic{flex:none;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;margin-top:1px}
+.ic.ok{background:var(--ok-bg);color:var(--ok)}
+.ic.warn{background:var(--warn-bg);color:var(--warn)}
+.hypo{background:#f7f2fb;border:1px dashed var(--purple-2);border-radius:10px;padding:10px 12px;font-size:.88rem;margin:14px 0}
+.disclaimer{font-size:.85rem;color:var(--muted);margin:12px 0}
+.recap{background:var(--bg);border-radius:10px;padding:10px 12px;font-size:.9rem;margin-bottom:14px}
+
+/* Confirm */
+.score-box{background:var(--purple);color:#fff;border-radius:var(--radius);padding:16px;margin:14px 0;display:flex;gap:16px;align-items:center}
+.score-num{font-size:2.6rem;font-weight:800;line-height:1;color:var(--orange)}
+.score-num small{font-size:1rem;color:#d9c9ea;font-weight:600}
+.score-lab{font-weight:800;font-size:1.1rem}
+.score-box .sub{font-size:.82rem;color:#d9c9ea}
+.breakdown{list-style:none;padding:0;margin:0 0 14px;font-size:.88rem;color:var(--muted)}
+.breakdown li{display:flex;justify-content:space-between;border-bottom:1px solid #eceef2;padding:5px 0}
+.next-step{background:var(--ok-bg);border:1px solid var(--ok-bd);border-radius:10px;padding:12px;font-weight:600;color:var(--ok);margin-bottom:14px}
+dl.summary{margin:0 0 14px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.92rem}
+dl.summary dt{font-weight:700;color:var(--purple)}
+dl.summary dd{margin:0;word-break:break-word}
+.local-box{font-size:.85rem;color:var(--muted);margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.local-box .btn{min-height:44px;font-size:.88rem;padding:6px 14px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--purple);color:#fff;padding:10px 18px;border-radius:999px;font-size:.9rem;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center;z-index:10}
+.toast.show{opacity:1}
+
+footer{background:var(--purple);color:#d9c9ea;font-size:.82rem;padding:20px 0 28px;margin-top:24px}
+@media (max-width:420px){
+  .hero h1{font-size:1.4rem}
+  .row{grid-template-columns:1fr}
+  .metric .v{font-size:1.3rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="brand">AI-Powered Business Challenge 2026</div>
+    <h1>Verificator de compatibilitate UR20</h1>
+    <p>Află în 2 minute dacă linia ta de găleți e potrivită pentru o celulă de paletizare UR20.</p>
+    <button type="button" class="btn btn-light install" id="installBtn">Instalează aplicația</button>
+  </div>
+</header>
+<div class="banner" role="note"><div class="wrap"><span aria-hidden="true">&#9888;</span><span>Prototip demonstrativ — folosiți date fictive, nu date personale reale.</span></div></div>
+
+<main class="wrap" id="main">
+
+  <details class="card" id="how">
+    <summary>Cum funcționează celula</summary>
+    <div class="inner">
+      <ol class="flow" aria-label="Fluxul celulei">
+        <li>umplere</li><li>transportor</li><li>vision mâner</li><li>gripper</li><li>2 poziții de paletizare</li><li>palet finalizat</li>
+      </ol>
+      <p><strong>Rămân manuale:</strong> schimbarea paleților și amplasarea separatoarelor dintre straturi.</p>
+      <div class="facts">
+        <h3>Fapte din studiul de caz PURATOS (rezultate de test, nu garanții)</h3>
+        <ul>
+          <li>Țintă: minimum 6 găleți/min.</li>
+          <li>Testat: 7,4 găleți/min la 13 kg și 8,6 găleți/min la 5 kg.</li>
+          <li>Pe palet: 100 găleți de 5 kg sau 44 găleți de 13 kg.</li>
+        </ul>
+      </div>
+    </div>
+  </details>
+
+  <ol class="progress" id="progress" aria-label="Progres">
+    <li class="current" data-i="1" aria-current="step">Pasul 1/3<small>Linia ta</small></li>
+    <li data-i="2">Pasul 2/3<small>Rezultat</small></li>
+    <li data-i="3">Pasul 3/3<small>Evaluare</small></li>
+  </ol>
+
+  <!-- STEP 1 -->
+  <section class="step active card" id="step1" aria-labelledby="h1s">
+    <h2 id="h1s" tabindex="-1">Pasul 1 — Linia ta</h2>
+    <p class="lead">Completați datele liniei de găleți. Câmpurile marcate cu <span class="req">*</span> sunt obligatorii.</p>
+
+    <form id="lineForm" novalidate>
+      <div class="form-summary" id="lineSummary" role="alert"></div>
+
+      <div class="field">
+        <label for="weight">Greutate găleată plină (kg) <span class="req" aria-hidden="true">*</span><span class="hint">între 1 și 30 kg</span></label>
+        <input type="text" id="weight" name="weight" inputmode="decimal" autocomplete="off" aria-describedby="weight-err" placeholder="ex. 13">
+        <div class="err" id="weight-err" aria-live="polite"></div>
+      </div>
+
+      <fieldset>
+        <legend>Găleata are mâner?</legend>
+        <div class="choices" role="radiogroup">
+          <label class="choice"><input type="radio" name="handle" value="Da"><span>Da</span></label>
+          <label class="choice"><input type="radio" name="handle" value="Nu"><span>Nu</span></label>
+          <label class="choice"><input type="radio" name="handle" value="Nu știu" checked><span>Nu știu</span></label>
+        </div>
+      </fieldset>
+
+      <div class="field">
+        <label for="flow">Debit linie (găleți/minut) <span class="req" aria-hidden="true">*</span><span class="hint">între 1 și 40</span></label>
+        <input type="text" id="flow" name="flow" inputmode="decimal" autocomplete="off" aria-describedby="flow-err" placeholder="ex. 7">
+        <div class="err" id="flow-err" aria-live="polite"></div>
+      </div>
+
+      <fieldset>
+        <legend>Număr schimburi/zi</legend>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="shifts" value="1"><span>1</span></label>
+          <label class="choice"><input type="radio" name="shifts" value="2" checked><span>2</span></label>
+          <label class="choice"><input type="radio" name="shifts" value="3"><span>3</span></label>
+        </div>
+      </fieldset>
+
+      <div class="row">
+        <div class="field">
+          <label for="hours">Ore pe schimb<span class="hint">1–12, implicit 8</span></label>
+          <input type="text" id="hours" name="hours" inputmode="decimal" autocomplete="off" value="8" aria-describedby="hours-err">
+          <div class="err" id="hours-err" aria-live="polite"></div>
+        </div>
+        <div class="field">
+          <label for="operators">Operatori la paletizare / schimb (azi)<span class="hint">opțional</span></label>
+          <input type="text" id="operators" name="operators" inputmode="numeric" autocomplete="off" value="2" aria-describedby="operators-err">
+          <div class="err" id="operators-err" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="pallet">Tip palet</label>
+        <select id="pallet" name="pallet">
+          <option value="Europalet 1200×800" selected>Europalet 1200×800</option>
+          <option value="Palet industrial 1200×1000">Palet industrial 1200×1000</option>
+          <option value="Altul">Altul</option>
+        </select>
+      </div>
+
+      <fieldset>
+        <legend>Folosiți separatoare între straturi?</legend>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="sep" value="Da"><span>Da</span></label>
+          <label class="choice"><input type="radio" name="sep" value="Nu" checked><span>Nu</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Mediu</legend>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="env" value="Uscat" checked><span>Uscat</span></label>
+          <label class="choice"><input type="radio" name="env" value="Umed"><span>Umed, cu spălare (washdown)</span></label>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-primary">Calculează</button>
+      </div>
+      <div class="demo-actions">
+        <button type="button" class="btn btn-ghost" id="exOk">Exemplu normal</button>
+        <button type="button" class="btn btn-ghost" id="exBad">Exemplu cu date greșite</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step card" id="step2" aria-labelledby="h2s">
+    <h2 id="h2s" tabindex="-1">Pasul 2 — Rezultat orientativ</h2>
+    <div id="resultBody" aria-live="polite"></div>
+    <div class="actions">
+      <button type="button" class="btn btn-primary" id="toStep3">Solicită evaluare tehnică</button>
+      <button type="button" class="btn btn-secondary" id="backTo1">Modifică datele</button>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="step card" id="step3" aria-labelledby="h3s">
+    <h2 id="h3s" tabindex="-1">Pasul 3 — Solicită evaluare tehnică / demonstrație</h2>
+    <p class="lead">Datele de mai jos rămân doar în acest browser (fără server). Folosiți date fictive.</p>
+    <div class="recap" id="recap"></div>
+
+    <form id="reqForm" novalidate>
+      <div class="form-summary" id="reqSummary" role="alert"></div>
+
+      <div class="field">
+        <label for="company">Companie <span class="req" aria-hidden="true">*</span></label>
+        <input type="text" id="company" autocomplete="off" aria-describedby="company-err">
+        <div class="err" id="company-err" aria-live="polite"></div>
+      </div>
+      <div class="field">
+        <label for="contact">Nume contact <span class="req" aria-hidden="true">*</span></label>
+        <input type="text" id="contact" autocomplete="off" aria-describedby="contact-err">
+        <div class="err" id="contact-err" aria-live="polite"></div>
+      </div>
+      <div class="field">
+        <label for="role">Funcție</label>
+        <select id="role">
+          <option value="">Alegeți funcția</option>
+          <option>Director producție</option>
+          <option>Director fabrică/general</option>
+          <option>Inginer proces/mentenanță</option>
+          <option>SSM</option>
+          <option>Achiziții</option>
+          <option>Altul</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="email">E-mail <span class="req" aria-hidden="true">*</span></label>
+        <input type="email" id="email" autocomplete="off" inputmode="email" aria-describedby="email-err" placeholder="nume@exemplu.ro">
+        <div class="err" id="email-err" aria-live="polite"></div>
+      </div>
+      <div class="field">
+        <label for="phone">Telefon<span class="hint">opțional, ex. 0712 345 678 sau +40 712 345 678</span></label>
+        <input type="tel" id="phone" autocomplete="off" inputmode="tel" aria-describedby="phone-err">
+        <div class="err" id="phone-err" aria-live="polite"></div>
+      </div>
+      <div class="field">
+        <label for="county">Județ</label>
+        <select id="county"><option value="">Alegeți județul</option></select>
+      </div>
+      <div class="field">
+        <label for="demo">Preferință demonstrație</label>
+        <select id="demo">
+          <option>Online</option>
+          <option>La Tech-Con Dragomirești-Deal</option>
+          <option>Iași</option>
+          <option>Timișoara</option>
+          <option>La fabrica noastră</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="timeline">Termen estimat investiție</label>
+        <select id="timeline">
+          <option>0–3 luni</option>
+          <option>3–6 luni</option>
+          <option>6–12 luni</option>
+          <option>peste 12 luni</option>
+          <option selected>nu știu</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="check">
+          <input type="checkbox" id="consent" aria-describedby="consent-err">
+          <label for="consent">Sunt de acord ca datele introduse să fie folosite (simulat) pentru a fi contactat în legătură cu evaluarea tehnică. <span class="req" aria-hidden="true">*</span></label>
+        </div>
+        <div class="err" id="consent-err" aria-live="polite"></div>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-primary">Trimite cererea</button>
+        <button type="button" class="btn btn-secondary" id="backTo2">Înapoi la rezultat</button>
+      </div>
+      <div class="demo-actions">
+        <button type="button" class="btn btn-ghost" id="fillDemo">Completează date fictive</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- CONFIRM -->
+  <section class="step card" id="stepDone" aria-labelledby="hds">
+    <h2 id="hds" tabindex="-1">Cerere înregistrată (simulat)</h2>
+    <div id="doneBody"></div>
+    <div class="actions">
+      <button type="button" class="btn btn-primary" id="dlTxt">Descarcă rezumat (.txt)</button>
+      <button type="button" class="btn btn-secondary" id="dlIcs">Adaugă în calendar (.ics)</button>
+      <button type="button" class="btn btn-ghost" id="restart">Începe din nou</button>
+    </div>
+    <div class="local-box">
+      <span id="savedCount" aria-live="polite"></span>
+      <button type="button" class="btn btn-ghost" id="clearData">Șterge datele</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">Prototip demonstrativ — AI-Powered Business Challenge 2026. Date fictive; valorile PURATOS sunt rezultate de test, nu garanții.</div>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- constante (fapte PURATOS) + ipoteze ---------- */
+var STORE_KEY = 'ur20_cereri_v1';
+var RATE_5 = 8.6, RATE_13 = 7.4, TARGET = 6;
+var PER_PALLET = {5:100, 13:44};
+var COUNTIES = ['Alba','Arad','Argeș','Bacău','Bihor','Bistrița-Năsăud','Botoșani','Brăila','Brașov','București','Buzău','Călărași','Caraș-Severin','Cluj','Constanța','Covasna','Dâmbovița','Dolj','Galați','Giurgiu','Gorj','Harghita','Hunedoara','Ialomița','Iași','Ilfov','Maramureș','Mehedinți','Mureș','Neamț','Olt','Prahova','Satu Mare','Sălaj','Sibiu','Suceava','Teleorman','Timiș','Tulcea','Vaslui','Vâlcea','Vrancea'];
+
+/* ---------- utilitare ---------- */
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function fmt(n,d){ d=d||0; var s=n.toFixed(d).split('.'); var i=s[0].replace(/\B(?=(\d{3})+(?!\d))/g,'.'); return s[1]?i+','+s[1]:i; }
+function fmtRate(n){ var s=n.toFixed(2).replace(/0+$/,'').replace(/\.$/,''); return s.replace('.',','); }
+function parseNum(str){
+  str=String(str==null?'':str).trim().replace(/\s+/g,'').replace(',','.');
+  if(str==='') return null;
+  if(!/^-?\d+(\.\d+)?$/.test(str)) return NaN;
+  return parseFloat(str);
+}
+function radio(name){ var el=document.querySelector('input[name="'+name+'"]:checked'); return el?el.value:''; }
+function setRadio(name,val){ var els=document.querySelectorAll('input[name="'+name+'"]'); for(var i=0;i<els.length;i++){ els[i].checked = (els[i].value===String(val)); } }
+function toast(msg){ var t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(function(){t.classList.remove('show');},2600); }
+
+/* ---------- navigare pași ---------- */
+var state = { inputs:null, result:null, record:null };
+function show(id, progress){
+  ['step1','step2','step3','stepDone'].forEach(function(s){ $(s).classList.toggle('active', s===id); });
+  var lis=document.querySelectorAll('#progress li');
+  for(var i=0;i<lis.length;i++){
+    var n=+lis[i].getAttribute('data-i');
+    lis[i].classList.toggle('current', n===progress);
+    lis[i].classList.toggle('done', n<progress);
+    if(n===progress) lis[i].setAttribute('aria-current','step'); else lis[i].removeAttribute('aria-current');
+  }
+  $('toast').classList.remove('show');
+  var sec=$(id);
+  var h=sec.querySelector('h2');
+  window.scrollTo({top:Math.max(0, $('progress').getBoundingClientRect().top + window.pageYOffset - 8), behavior:'auto'});
+  if(h) h.focus({preventScroll:true});
+}
+
+/* ---------- validare generică ---------- */
+function setErr(fieldId, msg){
+  var inp=$(fieldId), e=$(fieldId+'-err');
+  if(msg){ inp.classList.add('invalid'); inp.setAttribute('aria-invalid','true'); e.textContent=msg; e.classList.add('show'); }
+  else { inp.classList.remove('invalid'); inp.removeAttribute('aria-invalid'); e.textContent=''; e.classList.remove('show'); }
+}
+function showSummary(boxId, count){
+  var b=$(boxId);
+  if(count>0){ b.textContent = count===1 ? 'Corectați 1 câmp marcat mai jos.' : 'Corectați '+count+' câmpuri marcate mai jos.'; b.classList.add('show'); }
+  else { b.textContent=''; b.classList.remove('show'); }
+}
+
+/* ---------- Pasul 1: validare + calcul ---------- */
+function validateLine(){
+  var errs=[], v={};
+  var w=parseNum($('weight').value);
+  if(w===null) errs.push(['weight','Introduceți greutatea găleții pline, în kg.']);
+  else if(isNaN(w)) errs.push(['weight','Introduceți un număr valid (ex. 13 sau 12,5).']);
+  else if(w<1||w>30) errs.push(['weight','Greutatea trebuie să fie între 1 și 30 kg.']);
+  var f=parseNum($('flow').value);
+  if(f===null) errs.push(['flow','Introduceți debitul liniei, în găleți pe minut.']);
+  else if(isNaN(f)) errs.push(['flow','Introduceți un număr valid (ex. 7 sau 6,5).']);
+  else if(f<1||f>40) errs.push(['flow','Debitul trebuie să fie între 1 și 40 găleți/minut.']);
+  var h=parseNum($('hours').value);
+  if(h===null) errs.push(['hours','Introduceți orele pe schimb (implicit 8).']);
+  else if(isNaN(h)) errs.push(['hours','Introduceți un număr valid de ore.']);
+  else if(h<1||h>12) errs.push(['hours','Orele pe schimb trebuie să fie între 1 și 12.']);
+  var o=parseNum($('operators').value);
+  if(o!==null){
+    if(isNaN(o)||Math.floor(o)!==o) errs.push(['operators','Introduceți un număr întreg de operatori.']);
+    else if(o<0||o>20) errs.push(['operators','Numărul de operatori trebuie să fie între 0 și 20.']);
+  }
+  ['weight','flow','hours','operators'].forEach(function(id){ setErr(id,null); });
+  errs.forEach(function(e){ setErr(e[0],e[1]); });
+  showSummary('lineSummary', errs.length);
+  if(errs.length){ $(errs[0][0]).focus(); return null; }
+  v = { weight:w, handle:radio('handle'), flow:f, shifts:+radio('shifts'), hours:h, operators:o, pallet:$('pallet').value, sep:radio('sep'), env:radio('env') };
+  return v;
+}
+
+function compute(v){
+  var w=v.weight, r={};
+  if(w<=13){ r.cls='ok'; r.badge='În limitele testate'; r.headline='Greutatea de '+fmt(w,w%1?1:0)+' kg este în intervalul testat la PURATOS (5–13 kg).'; }
+  else if(w<=15){ r.cls='warn'; r.badge='Necesită validare tehnică'; r.headline='Greutatea de '+fmt(w,w%1?1:0)+' kg depășește greutatea testată (13 kg); configurația trebuie validată tehnic.'; }
+  else { r.cls='bad'; r.badge='Nepotrivit pentru UR20 în configurația testată'; r.headline='Greutatea de '+fmt(w,w%1?1:0)+' kg depășește capacitatea estimată a configurației testate. Tech-Con evaluează alte variante.'; }
+  // rata testată
+  if(w<=5){ r.rate=RATE_5; r.rateNote='valoare testată la 5 kg (8,6/min), folosită ca referință și sub 5 kg'; }
+  else if(w<13){ r.rate=RATE_5-(w-5)/8*(RATE_5-RATE_13); r.rateNote='interpolare liniară între 8,6/min (5 kg) și 7,4/min (13 kg)'; }
+  else if(w===13){ r.rate=RATE_13; r.rateNote='valoare testată la 13 kg'; }
+  else { r.rate=RATE_13; r.rateNote='extrapolare: peste greutatea testată, doar orientativ'; }
+  r.cells=Math.max(1, Math.ceil(v.flow/r.rate - 1e-9));
+  r.perShift=v.flow*60*v.hours;
+  r.perDay=r.perShift*v.shifts;
+  r.bpp = (v.pallet==='Europalet 1200×800' && PER_PALLET[w]) ? PER_PALLET[w] : null;
+  if(r.bpp){
+    r.palletsShift=r.perShift/r.bpp;
+    r.changesHour=(v.flow*60/r.bpp)/r.cells;
+    r.changeMin=60/r.changesHour;
+  }
+  r.tShift=r.perShift*w/1000;
+  r.tDay=r.tShift*v.shifts;
+  return r;
+}
+
+function buildChecklist(v,r){
+  var L=[], w=v.weight;
+  if(w<=13) L.push(['ok','Greutate: '+fmt(w,w%1?1:0)+' kg este în intervalul testat; sarcina totală include și gripperul (verificăm la evaluare).']);
+  else L.push(['warn','Greutate: '+fmt(w,w%1?1:0)+' kg este peste valoarea testată; sarcina totală (găleată + gripper) trebuie verificată față de cei 20 kg nominali.']);
+  if(v.handle==='Da') L.push(['ok','Mâner prezent: orientarea se identifică prin vedere 2D; verificăm vizibilitatea mânerului pe eșantioane.']);
+  else L.push(['warn','Mâner '+(v.handle==='Nu'?'absent':'neconfirmat')+': adaptarea gripperului și a identificării (vision) trebuie validată.']);
+  L.push(['warn','Formă, material și stabilitate găleată: se verifică pe găleți reale (eșantion) la evaluare.']);
+  if(v.flow>r.rate*r.cells+1e-9) L.push(['warn','Debit de intrare: '+fmtRate(v.flow)+'/min depășește valoarea testată pe celulă; verificăm debitul real și blocajele amonte/aval.']);
+  else L.push(['ok','Debit de intrare: '+fmtRate(v.flow)+'/min este acoperit de '+r.cells+' '+(r.cells===1?'celulă':'celule')+' la valorile testate.']);
+  if(r.bpp) L.push(['ok','Model de paletizare: '+r.bpp+' găleți/palet, valoare cunoscută din studiul de caz (europalet).']);
+  else L.push(['warn','Model de paletizare: numărul de găleți pe palet se stabilește la evaluare.']);
+  if(v.pallet==='Altul') L.push(['warn','Tip palet „Altul”: modelul de paletizare și stabilitatea paletului trebuie validate.']);
+  else if(v.pallet!=='Europalet 1200×800') L.push(['warn','Palet industrial 1200×1000: pattern-ul de paletizare diferă de cel testat și trebuie validat.']);
+  if(v.sep==='Da') L.push(['warn','Separatoare între straturi: în celula testată amplasarea lor rămâne manuală; stabilim ritmul de intervenție.']);
+  else L.push(['ok','Fără separatoare între straturi: un punct manual mai puțin de coordonat.']);
+  L.push(['warn','Schimbarea paleților rămâne manuală: verificăm ritmul de schimb și accesul pentru stivuitor/transpalet.']);
+  if(v.env==='Umed') L.push(['warn','Mediu umed/washdown: cerințele de igienă și protecția echipamentului trebuie validate.']);
+  else L.push(['ok','Mediu uscat: fără cerințe speciale de spălare în acest prototip.']);
+  L.push(['warn','Spațiu, acces și integrare cu transportorul, semnale de proces și pregătirea celor 2 poziții de paletizare: se verifică la vizită.']);
+  L.push(['warn','Siguranță: evaluare de riscuri, interacțiunea cu oamenii și proceduri (celula testată folosește 3 scanere de siguranță).']);
+  return L;
+}
+
+function renderResult(v,r){
+  var wTxt=fmt(v.weight,v.weight%1?1:0);
+  var red = r.cls==='bad';
+  var h='';
+  h+='<div class="badge-box '+r.cls+'" role="status"><span class="badge">'+(r.cls==='ok'?'&#10003; ':r.cls==='warn'?'&#9888; ':'&#10005; ')+esc(r.badge)+'</span><p>'+esc(r.headline)+'</p></div>';
+  h+='<div class="metrics">';
+  h+='<div class="metric"><div class="v">'+(red?'—':r.cells)+'</div><div class="l">Celule necesare</div><div class="s">'+(red?'nu se calculează pentru configurația testată':'rata testată: '+fmtRate(r.rate)+' găleți/min / celulă'+(v.weight>13?' (extrapolare)':''))+'</div></div>';
+  h+='<div class="metric"><div class="v">'+fmt(r.perShift)+'</div><div class="l">Găleți / schimb</div><div class="s">'+fmtRate(v.flow)+' × 60 × '+fmtRate(v.hours)+' h</div></div>';
+  if(r.bpp && !red){
+    h+='<div class="metric"><div class="v">'+fmt(r.palletsShift,1)+'</div><div class="l">Paleți / schimb</div><div class="s">'+r.bpp+' găleți pe palet</div></div>';
+    h+='<div class="metric"><div class="v">'+fmt(r.changesHour,1)+'</div><div class="l">Schimburi de palet / oră / celulă</div><div class="s">intervenție manuală la ~'+fmt(r.changeMin,1)+' min</div></div>';
+  } else {
+    h+='<div class="metric wide"><div class="v" style="font-size:1.05rem">Paleți / schimb: se stabilește la evaluare</div><div class="l">Model de paletizare</div><div class="s">Valorile cunoscute (100 × 5 kg, 44 × 13 kg) se aplică doar pe europalet și exact la 5 sau 13 kg.</div></div>';
+  }
+  h+='<div class="metric"><div class="v">'+fmt(r.tShift,1)+' t</div><div class="l">Masă ridicată manual / schimb</div><div class="s">care ar fi preluată de celulă</div></div>';
+  h+='<div class="metric"><div class="v">'+fmt(r.tDay,1)+' t</div><div class="l">Masă ridicată manual / zi</div><div class="s">'+v.shifts+' '+(v.shifts===1?'schimb':'schimburi')+'</div></div>';
+  h+='</div>';
+  h+='<p class="disclaimer" style="margin-top:-4px">Beneficiu: mai puțină ridicare manuală (efort repetitiv), nu un calcul de economii financiare.</p>';
+
+  h+='<h3 class="sec-title">Ce înseamnă pentru linia ta</h3><ul class="notes">';
+  h+='<li><strong>Rata testată pentru '+wTxt+' kg: '+fmtRate(r.rate)+' găleți/min</strong> — '+esc(r.rateNote)+'.</li>';
+  if(v.flow>r.rate+1e-9) h+='<li>Debitul liniei ('+fmtRate(v.flow)+'/min) depășește valoarea testată pentru o singură celulă ('+fmtRate(r.rate)+'/min): '+(red?'':'ar fi necesare '+r.cells+' celule, sau ')+'debitul trebuie validat la evaluare.</li>';
+  else if(v.flow<TARGET) h+='<li>Debitul liniei ('+fmtRate(v.flow)+'/min) este sub ținta de 6 găleți/min din studiul de caz: există rezervă de capacitate.</li>';
+  else h+='<li>Debitul liniei ('+fmtRate(v.flow)+'/min) este în limita valorii testate pentru o celulă.</li>';
+  h+='<li>Un robot mai rapid nu crește debitul fabricii — verificăm blocajul amonte/aval.</li>';
+  h+='<li>Calculele presupun funcționare continuă a liniei pe durata schimbului.</li>';
+  if(v.operators!==null) h+='<li>Azi: '+v.operators+' '+(v.operators===1?'operator':'operatori')+' la paletizare pe schimb. În celula testată rămân manuale schimbarea paleților și amplasarea separatoarelor, deci nu dispare complet intervenția umană.</li>';
+  h+='</ul>';
+
+  h+='<h3 class="sec-title">Checklist de validare</h3><ul class="checklist">';
+  buildChecklist(v,r).forEach(function(it){ h+='<li><span class="ic '+it[0]+'" aria-hidden="true">'+(it[0]==='ok'?'&#10003;':'!')+'</span><span><span class="sr-only">'+(it[0]==='ok'?'În regulă: ':'De verificat: ')+'</span>'+esc(it[1])+'</span></li>'; });
+  h+='</ul>';
+
+  h+='<div class="hypo"><strong>Ipoteză de lucru (nu fapt):</strong> UR20 are sarcină utilă nominală de 20 kg (date producător). Presupunem un gripper de ≈ 5 kg, deci capacitate utilă ≈ 15 kg pentru găleată. Pragurile folosite: ≤ 13 kg în limitele testate, 13–15 kg necesită validare, > 15 kg nepotrivit pentru configurația testată. Pragurile trebuie confirmate de Tech-Con.</div>';
+  h+='<p class="disclaimer">Rezultatele sunt orientative. Decizia finală se ia după evaluarea tehnică Tech-Con. Valorile PURATOS sunt rezultate de test, nu garanții.</p>';
+  $('resultBody').innerHTML=h;
+}
+
+/* ---------- handlers pas 1 ---------- */
+$('lineForm').addEventListener('submit',function(ev){
+  ev.preventDefault();
+  var v=validateLine();
+  if(!v){ state.inputs=null; state.result=null; return; }
+  var r=compute(v);
+  state.inputs=v; state.result=r;
+  renderResult(v,r);
+  show('step2',2);
+});
+function fillLine(o){
+  $('weight').value=o.weight; $('flow').value=o.flow; $('hours').value=o.hours; $('operators').value=o.operators;
+  setRadio('handle',o.handle); setRadio('shifts',o.shifts); setRadio('sep',o.sep); setRadio('env',o.env); $('pallet').value=o.pallet;
+}
+$('exOk').addEventListener('click',function(){
+  fillLine({weight:'13',handle:'Da',flow:'7',shifts:3,hours:'8',operators:'2',pallet:'Europalet 1200×800',sep:'Da',env:'Uscat'});
+  ['weight','flow','hours','operators'].forEach(function(id){setErr(id,null);}); showSummary('lineSummary',0);
+  toast('Exemplu normal completat. Apăsați „Calculează”.');
+});
+$('exBad').addEventListener('click',function(){
+  fillLine({weight:'',handle:'Nu știu',flow:'-5',shifts:2,hours:'30',operators:'2',pallet:'Europalet 1200×800',sep:'Nu',env:'Uscat'});
+  toast('Date greșite completate. Apăsați „Calculează”.');
+});
+['weight','flow','hours','operators'].forEach(function(id){ $(id).addEventListener('input',function(){ if($(id).classList.contains('invalid')) setErr(id,null); }); });
+$('backTo1').addEventListener('click',function(){ show('step1',1); });
+$('toStep3').addEventListener('click',function(){
+  var v=state.inputs, r=state.result;
+  $('recap').innerHTML='<strong>Linia ta:</strong> '+fmt(v.weight,v.weight%1?1:0)+' kg, '+fmtRate(v.flow)+' găleți/min, '+v.shifts+' sch. × '+fmtRate(v.hours)+' h. <strong>Rezultat:</strong> '+esc(r.badge)+(r.cls==='bad'?'':', '+r.cells+' '+(r.cells===1?'celulă':'celule'))+'.';
+  show('step3',3);
+});
+$('backTo2').addEventListener('click',function(){ show('step2',2); });
+
+/* ---------- Pasul 3 ---------- */
+(function(){ var s=$('county'); COUNTIES.forEach(function(c){ var o=document.createElement('option'); o.textContent=c; s.appendChild(o); }); })();
+
+function validPhone(p){
+  var s=p.replace(/[\s.\-()]/g,'');
+  return /^(\+40|0040|0)7\d{8}$/.test(s) || /^(\+40|0040|0)[23]\d{8}$/.test(s);
+}
+function validateReq(){
+  var errs=[];
+  var company=$('company').value.trim(), contact=$('contact').value.trim(), email=$('email').value.trim(), phone=$('phone').value.trim();
+  if(!company) errs.push(['company','Introduceți numele companiei.']);
+  if(!contact) errs.push(['contact','Introduceți numele persoanei de contact.']);
+  if(!email) errs.push(['email','Introduceți adresa de e-mail.']);
+  else if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) errs.push(['email','Adresa de e-mail nu pare validă (ex. nume@exemplu.ro).']);
+  if(phone && !validPhone(phone)) errs.push(['phone','Număr de telefon invalid. Folosiți format românesc, ex. 0712 345 678 sau +40 712 345 678.']);
+  if(!$('consent').checked) errs.push(['consent','Este necesar consimțământul pentru a trimite cererea.']);
+  ['company','contact','email','phone'].forEach(function(id){setErr(id,null);});
+  var ce=$('consent-err'); ce.textContent=''; ce.classList.remove('show'); $('consent').removeAttribute('aria-invalid');
+  errs.forEach(function(e){
+    if(e[0]==='consent'){ ce.textContent=e[1]; ce.classList.add('show'); $('consent').setAttribute('aria-invalid','true'); }
+    else setErr(e[0],e[1]);
+  });
+  showSummary('reqSummary',errs.length);
+  if(errs.length){ $(errs[0][0]).focus(); return null; }
+  return {company:company,contact:contact,role:$('role').value,email:email,phone:phone,county:$('county').value,demo:$('demo').value,timeline:$('timeline').value};
+}
+['company','contact','email','phone'].forEach(function(id){ $(id).addEventListener('input',function(){ if($(id).classList.contains('invalid')) setErr(id,null); }); });
+$('consent').addEventListener('change',function(){ if($('consent').checked){ $('consent-err').classList.remove('show'); $('consent-err').textContent=''; $('consent').removeAttribute('aria-invalid'); } });
+
+$('fillDemo').addEventListener('click',function(){
+  $('company').value='Fabrica Demo SRL (fictiv)'; $('contact').value='Ion Popescu (fictiv)'; $('role').value='Director producție';
+  $('email').value='contact@exemplu-demo.ro'; $('phone').value='0712 345 678'; $('county').value='Ilfov'; $('demo').value='Online';
+  $('timeline').value='0–3 luni'; $('consent').checked=true;
+  ['company','contact','email','phone'].forEach(function(id){setErr(id,null);});
+  $('consent-err').classList.remove('show'); showSummary('reqSummary',0);
+  toast('Date fictive completate.');
+});
+
+/* scor de calificare (intern, demonstrativ) */
+function score(v,r,c){
+  var fit = r.cls==='ok'?40 : r.cls==='warn'?20 : 5;
+  var roleMap={'Director producție':20,'Director fabrică/general':20,'Inginer proces/mentenanță':12,'SSM':8,'Achiziții':8,'Altul':4};
+  var role = roleMap[c.role]!==undefined ? roleMap[c.role] : 4;
+  var tlMap={'0–3 luni':20,'3–6 luni':15,'6–12 luni':8,'peste 12 luni':3,'nu știu':5};
+  var tl = tlMap[c.timeline]!==undefined ? tlMap[c.timeline] : 5;
+  var vol = ({1:2,2:6,3:10})[v.shifts] + (v.flow>=TARGET?10 : v.flow>=3?5 : 2);
+  var total=fit+role+tl+vol;
+  return {total:total, fit:fit, role:role, tl:tl, vol:vol, label: total>=60?'Cerere relevantă':'De nutrit'};
+}
+
+function proposedSlot(){
+  var d=new Date(), added=0;
+  while(added<5){ d.setDate(d.getDate()+1); var g=d.getDay(); if(g!==0&&g!==6) added++; }
+  d.setHours(10,0,0,0); return d;
+}
+function pad(n){ return (n<10?'0':'')+n; }
+function icsLocal(d){ return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'T'+pad(d.getHours())+pad(d.getMinutes())+'00'; }
+function icsUtc(d){ return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+'Z'; }
+function icsEsc(s){ return String(s).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n'); }
+function slotText(d){ return pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+d.getFullYear()+', ora '+pad(d.getHours())+':'+pad(d.getMinutes()); }
+
+function summaryText(rec){
+  var v=rec.line, r=rec.result, c=rec.contact, s=rec.score, L=[];
+  L.push('SOLICITARE EVALUARE TEHNICĂ UR20 (prototip demonstrativ, date fictive)');
+  L.push('Generat: '+new Date(rec.ts).toLocaleString('ro-RO'));
+  L.push('');
+  L.push('LINIA');
+  L.push('- Greutate găleată plină: '+fmtRate(v.weight)+' kg');
+  L.push('- Mâner: '+v.handle);
+  L.push('- Debit linie: '+fmtRate(v.flow)+' găleți/min');
+  L.push('- Schimburi/zi: '+v.shifts+', ore/schimb: '+fmtRate(v.hours));
+  L.push('- Operatori la paletizare/schimb (azi): '+(v.operators===null?'nespecificat':v.operators));
+  L.push('- Palet: '+v.pallet+'; separatoare: '+v.sep+'; mediu: '+v.env);
+  L.push('');
+  L.push('REZULTAT ORIENTATIV');
+  L.push('- Status: '+r.badge);
+  L.push('- Rata testată: '+fmtRate(r.rate)+' găleți/min/celulă ('+r.rateNote+')');
+  L.push('- Celule necesare: '+(r.cls==='bad'?'nu se calculează (configurație netestată)':r.cells));
+  L.push('- Găleți/schimb: '+fmt(r.perShift));
+  L.push('- Paleți/schimb: '+(r.bpp?fmt(r.palletsShift,1):'se stabilește la evaluare'));
+  L.push('- Masă ridicată manual: '+fmt(r.tShift,1)+' t/schimb, '+fmt(r.tDay,1)+' t/zi');
+  L.push('');
+  L.push('CONTACT (fictiv)');
+  L.push('- Companie: '+c.company);
+  L.push('- Persoană: '+c.contact+(c.role?' ('+c.role+')':''));
+  L.push('- E-mail: '+c.email);
+  L.push('- Telefon: '+(c.phone||'-'));
+  L.push('- Județ: '+(c.county||'-'));
+  L.push('- Demonstrație preferată: '+c.demo);
+  L.push('- Termen estimat investiție: '+c.timeline);
+  L.push('');
+  L.push('Scor de calificare (intern, demonstrativ): '+s.total+'/100 — '+s.label);
+  L.push('Slot propus pentru demonstrație: '+slotText(new Date(rec.slot)));
+  L.push('');
+  L.push('Rezultatele sunt orientative; decizia finală după evaluarea tehnică Tech-Con.');
+  L.push('Prototip demonstrativ — AI-Powered Business Challenge 2026. Date fictive; valorile PURATOS sunt rezultate de test, nu garanții.');
+  return L.join('\r\n');
+}
+function icsText(rec){
+  var d=new Date(rec.slot), end=new Date(d.getTime()+60*60000), c=rec.contact;
+  var desc='Cerere de evaluare tehnică UR20 (prototip demonstrativ, date fictive). Companie: '+c.company+'. Greutate găleată: '+fmtRate(rec.line.weight)+' kg, debit: '+fmtRate(rec.line.flow)+' găleți/min. Status: '+rec.result.badge+'. Slot propus, de confirmat de Tech-Con.';
+  return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Verificator UR20//Prototip//RO','CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT',
+    'UID:'+rec.id+'@verificator-ur20.local','DTSTAMP:'+icsUtc(new Date()),'DTSTART:'+icsLocal(d),'DTEND:'+icsLocal(end),
+    'SUMMARY:'+icsEsc('Demonstrație / evaluare tehnică UR20 (propunere)'),'DESCRIPTION:'+icsEsc(desc),'LOCATION:'+icsEsc(c.demo),'END:VEVENT','END:VCALENDAR'].join('\r\n');
+}
+function download(name,mime,content){
+  var blob=new Blob([content],{type:mime});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(url); a.remove(); },500);
+}
+
+/* localStorage (în try/catch) */
+function loadStore(){ try{ var a=JSON.parse(localStorage.getItem(STORE_KEY)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
+var memStore=[];
+function saveRecord(rec){
+  var ok=true;
+  try{ var a=loadStore(); a.push(rec); localStorage.setItem(STORE_KEY,JSON.stringify(a)); }catch(e){ ok=false; memStore.push(rec); }
+  return ok;
+}
+function countSaved(){ return loadStore().length + memStore.length; }
+function updateCount(){ $('savedCount').textContent='Cereri salvate local în acest prototip: '+countSaved(); }
+
+$('reqForm').addEventListener('submit',function(ev){
+  ev.preventDefault();
+  var c=validateReq();
+  if(!c) return;
+  var v=state.inputs, r=state.result;
+  var s=score(v,r,c), slot=proposedSlot();
+  var rec={id:'ur20-'+Date.now(), ts:Date.now(), line:v, result:{cls:r.cls,badge:r.badge,rate:r.rate,rateNote:r.rateNote,cells:r.cells,perShift:r.perShift,bpp:r.bpp,palletsShift:r.palletsShift,tShift:r.tShift,tDay:r.tDay}, contact:c, score:s, slot:slot.getTime()};
+  state.record=rec;
+  var saved=saveRecord(rec);
+  var h='';
+  h+='<div class="score-box"><div class="score-num">'+s.total+'<small>/100</small></div><div><div class="score-lab">'+esc(s.label)+'</div><div class="sub">Scor de calificare (intern, demonstrativ)</div></div></div>';
+  h+='<ul class="breakdown"><li><span>Potrivire tehnică</span><span>'+s.fit+' / 40</span></li><li><span>Rol (decident)</span><span>'+s.role+' / 20</span></li><li><span>Termen investiție</span><span>'+s.tl+' / 20</span></li><li><span>Volum și schimburi</span><span>'+s.vol+' / 20</span></li></ul>';
+  h+='<div class="next-step">Următorul pas: un inginer Tech-Con vă contactează în 2 zile lucrătoare pentru evaluare (simulat).<br><span style="font-weight:500">Slot propus pentru demonstrație: '+esc(slotText(slot))+' — '+esc(c.demo)+'.</span></div>';
+  h+='<h3 class="sec-title" style="margin-top:0">Rezumatul cererii</h3><dl class="summary">';
+  h+='<dt>Companie</dt><dd>'+esc(c.company)+'</dd><dt>Contact</dt><dd>'+esc(c.contact)+(c.role?' ('+esc(c.role)+')':'')+'</dd><dt>E-mail</dt><dd>'+esc(c.email)+'</dd>';
+  if(c.phone) h+='<dt>Telefon</dt><dd>'+esc(c.phone)+'</dd>';
+  if(c.county) h+='<dt>Județ</dt><dd>'+esc(c.county)+'</dd>';
+  h+='<dt>Linia</dt><dd>'+fmtRate(v.weight)+' kg, mâner: '+esc(v.handle)+', '+fmtRate(v.flow)+' găleți/min, '+v.shifts+' sch. × '+fmtRate(v.hours)+' h</dd>';
+  h+='<dt>Rezultat</dt><dd>'+esc(r.badge)+(r.cls==='bad'?'':', '+r.cells+' '+(r.cells===1?'celulă':'celule'))+'</dd>';
+  h+='<dt>Ridicare manuală</dt><dd>'+fmt(r.tShift,1)+' t/schimb, '+fmt(r.tDay,1)+' t/zi</dd>';
+  h+='<dt>Demonstrație</dt><dd>'+esc(c.demo)+'</dd><dt>Termen</dt><dd>'+esc(c.timeline)+'</dd></dl>';
+  if(!saved) h+='<p class="disclaimer">Stocarea locală nu este disponibilă în acest browser; cererea a fost păstrată doar cât timp pagina rămâne deschisă.</p>';
+  $('doneBody').innerHTML=h;
+  updateCount();
+  show('stepDone',3);
+});
+$('dlTxt').addEventListener('click',function(){ if(state.record) download('rezumat-evaluare-ur20.txt','text/plain;charset=utf-8','\ufeff'+summaryText(state.record)); });
+$('dlIcs').addEventListener('click',function(){ if(state.record) download('demonstratie-ur20.ics','text/calendar;charset=utf-8',icsText(state.record)); });
+$('restart').addEventListener('click',function(){
+  $('lineForm').reset(); $('reqForm').reset();
+  ['weight','flow','hours','operators'].forEach(function(id){setErr(id,null);});
+  ['company','contact','email','phone'].forEach(function(id){setErr(id,null);});
+  $('consent-err').classList.remove('show'); showSummary('lineSummary',0); showSummary('reqSummary',0);
+  state={inputs:null,result:null,record:null};
+  show('step1',1);
+});
+$('clearData').addEventListener('click',function(){
+  try{ localStorage.removeItem(STORE_KEY); }catch(e){}
+  memStore=[]; updateCount(); toast('Datele salvate local au fost șterse.');
+});
+updateCount();
+
+/* ---------- instalare PWA ---------- */
+var deferred=null;
+window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); deferred=e; $('installBtn').style.display='inline-flex'; });
+$('installBtn').addEventListener('click',function(){
+  if(!deferred) return;
+  deferred.prompt();
+  deferred.userChoice.then(function(){ deferred=null; $('installBtn').style.display='none'; });
+});
+window.addEventListener('appinstalled',function(){ $('installBtn').style.display='none'; });
+
+/* ---------- service worker ---------- */
+if('serviceWorker' in navigator && location.protocol!=='file:'){
+  window.addEventListener('load',function(){ navigator.serviceWorker.register('./sw.js').catch(function(){}); });
+}
+})();
+</script>
+</body>
+</html>

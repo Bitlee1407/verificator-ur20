@@ -1,0 +1,19 @@
+{
+  "name": "Verificator de compatibilitate UR20",
+  "short_name": "Verificator UR20",
+  "description": "Află în 2 minute dacă linia ta de găleți e potrivită pentru o celulă de paletizare UR20. Prototip demonstrativ.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "ro",
+  "background_color": "#F2F4F7",
+  "theme_color": "#2A0F45",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
